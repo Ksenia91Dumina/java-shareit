@@ -32,15 +32,22 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIfValidationException(final MethodArgumentNotValidException e) {
-        log.info("403 {}", e.getMessage(), e);
+        log.info("400 {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleIfIllegalArgumentException(final IllegalArgumentException e) {
+        log.info("409 {}", e.getMessage(), e);
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleEmailValidateException(final EmailValidateException e) {
         log.info("409 {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }

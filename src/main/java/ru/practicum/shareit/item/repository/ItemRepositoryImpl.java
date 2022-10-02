@@ -36,7 +36,7 @@ public class ItemRepositoryImpl implements ItemRepository {
             if (item.getDescription() != null) {
                 itemToCheck.setDescription(item.getDescription());
             }
-            if (item.getAvailable() != null) {
+            if (item.getAvailable() != itemToCheck.getAvailable()) {
                 itemToCheck.setAvailable(item.getAvailable());
             }
         }
@@ -56,9 +56,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public void deleteItemById(long itemId) {
-        if (!allItems.isEmpty()) {
             allItems.remove(itemId);
-        }
     }
 
 }

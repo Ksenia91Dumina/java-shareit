@@ -19,6 +19,9 @@ public class ItemDto {
     @NotBlank(groups = {Create.class})
     private String description;
     @NotNull(groups = {Create.class})
-    private Boolean available;
+    private boolean available;
 
+    public boolean getAvailable() {
+        return available;
+    }
 }

@@ -14,7 +14,7 @@ public class UserDto {
     private long id;
     @NotNull (groups = {Create.class})
     private String name;
-    @Email (groups = {Create.class})
-    @NotNull (groups = {Create.class, Update.class})
+    @Email(groups = {Update.class, Create.class})
+    @NotNull (groups = {Create.class})
     private String email;
 }

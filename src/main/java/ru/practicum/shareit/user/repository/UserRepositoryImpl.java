@@ -19,7 +19,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User createUser(User user) {
         user.setId(++id);
         for (User userToCheck : getAllUsers()) {
-            if (user.getEmail() == userToCheck.getEmail()) {
+            if (user.getEmail().equals(userToCheck.getEmail()))  {
                 throw new EmailValidateException("Пользователь с почтой " + user.getEmail() + " уже существует");
             }
         }
@@ -30,13 +30,13 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User updateUser(User user) {
         User userToCheck = allUsers.get(user.getId());
-        if (user.getEmail() == userToCheck.getEmail()) {
-            throw new EmailValidateException("Пользователь с почтой " + user.getEmail() + " уже существует");
-        } else {
-            if (user.getName() != null) {
-                userToCheck.setName(user.getName());
-            }
-            if (user.getEmail() != null) {
+        if (user.getName() != null) {
+            userToCheck.setName(user.getName());
+        }
+        if (user.getEmail() != null) {
+            if (user.getEmail().equals(userToCheck.getEmail())) {
+                throw new EmailValidateException("Пользователь с почтой " + user.getEmail() + " уже существует");
+            } else {
                 userToCheck.setEmail(user.getEmail());
             }
         }

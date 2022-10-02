@@ -12,7 +12,10 @@ public class Item {
     private long id;
     private String name;
     private String description;
-    private Boolean available;
+    private boolean available;
     private long ownerId;
 
+    public boolean getAvailable() {
+        return available;
+    }
 }
