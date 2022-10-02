@@ -40,13 +40,6 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleIfIllegalArgumentException(final IllegalArgumentException e) {
-        log.info("409 {}", e.getMessage(), e);
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleEmailValidateException(final EmailValidateException e) {
         log.info("409 {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());

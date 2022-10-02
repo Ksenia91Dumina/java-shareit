@@ -83,7 +83,6 @@ public class ItemServiceImpl implements ItemService {
                 availableItems.add(ItemMapper.toItemDto(itemToCheck));
             }
         }
-
         return availableItems;
     }
 
