@@ -56,7 +56,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public void deleteItemById(long itemId) {
-            allItems.remove(itemId);
+        allItems.remove(itemId);
     }
 
 }

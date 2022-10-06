@@ -20,7 +20,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationException(final NotAllowedException e) {
-        log.info("400 {}", e.getMessage(), e);
+        log.info("404 {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }
 
