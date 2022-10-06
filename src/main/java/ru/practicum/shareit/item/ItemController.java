@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.Create;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
+@Slf4j
 public class ItemController {
 
     private final ItemService itemService;
@@ -23,27 +25,32 @@ public class ItemController {
     @PostMapping
     public ItemDto createItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                               @Validated({Create.class}) @RequestBody ItemDto itemDto) {
+        log.info("Получен запрос на добавление предмета");
         return itemService.createItem(itemDto, userId);
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                               @Validated({Update.class}) @RequestBody ItemDto itemDto) {
+        log.info("Получен запрос на изменение предмета");
         return itemService.updateItem(itemDto, userId);
     }
 
     @GetMapping("/{itemId}")
     public ItemDto getItemById(@PathVariable Long itemId) {
+        log.info("Получен запрос на получение информации по id предмета = "+ itemId);
         return itemService.getItemById(itemId);
     }
 
     @GetMapping
     public List<ItemDto> getItemsByUserId(@RequestHeader("X-Sharer-User-Id") Long userId) {
+        log.info("Получен запрос на получение списка предметов пользователя с id = "+ userId);
         return itemService.getItemsByUserId(userId);
     }
 
     @GetMapping("/search")
     public List<ItemDto> searchByText(@RequestParam(name = "text") String text) {
+        log.info("Получен запрос на поиск по тексту");
         return itemService.searchByText(text);
     }
 }
