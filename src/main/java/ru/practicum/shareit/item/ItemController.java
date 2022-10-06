@@ -38,13 +38,13 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     public ItemDto getItemById(@PathVariable Long itemId) {
-        log.info("Получен запрос на получение информации по id предмета = "+ itemId);
+        log.info("Получен запрос на получение информации по id предмета = " + itemId);
         return itemService.getItemById(itemId);
     }
 
     @GetMapping
     public List<ItemDto> getItemsByUserId(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        log.info("Получен запрос на получение списка предметов пользователя с id = "+ userId);
+        log.info("Получен запрос на получение списка предметов пользователя с id = " + userId);
         return itemService.getItemsByUserId(userId);
     }
 
