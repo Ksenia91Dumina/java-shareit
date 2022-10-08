@@ -17,8 +17,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User createUser(User user) {
-        user.setId(++id);
         checkUserEmailForDuplicate(user);
+        user.setId(++id);
         allUsers.put(user.getId(), user);
         return user;
     }

@@ -22,8 +22,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto createItem(ItemDto itemDto, long userId) {
         userService.getUserById(userId);
-        Item item = ItemMapper.toItem(itemDto, userId);
-        itemRepository.createItem(item);
+        Item item = itemRepository.createItem(ItemMapper.toItem(itemDto, userId));
         return ItemMapper.toItemDto(item);
     }
 
@@ -72,11 +71,6 @@ public class ItemServiceImpl implements ItemService {
                 .filter(Item::getAvailable)
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
-    }
-
-    public void deleteItemById(long itemId) {
-        getItemById(itemId);
-        itemRepository.deleteItemById(itemId);
     }
 
 }

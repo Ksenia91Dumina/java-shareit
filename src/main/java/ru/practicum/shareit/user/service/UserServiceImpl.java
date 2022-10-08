@@ -18,8 +18,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        User user = UserMapper.toUser(userDto);
-        userRepository.createUser(user);
+        User user = userRepository.createUser(UserMapper.toUser(userDto));
         return UserMapper.toUserDto(user);
     }
 
@@ -27,8 +26,8 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(UserDto userDto, long userId) {
         getUserById(userId);
         User user = UserMapper.toUser(userDto);
-        userRepository.updateUser(user);
-        return UserMapper.toUserDto(user);
+        user.setId(userId);
+        return UserMapper.toUserDto(userRepository.updateUser(user));
     }
 
     @Override

@@ -60,9 +60,5 @@ public class ItemRepositoryImpl implements ItemRepository {
         return List.copyOf(allItems.values());
     }
 
-    @Override
-    public void deleteItemById(long itemId) {
-        allItems.remove(itemId);
-    }
 
 }

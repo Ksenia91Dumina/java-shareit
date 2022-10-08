@@ -13,5 +13,4 @@ public interface ItemRepository {
 
     List<Item> getAllItems();
 
-    void deleteItemById(long itemId);
 }
