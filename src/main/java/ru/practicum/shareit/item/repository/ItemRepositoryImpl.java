@@ -42,8 +42,8 @@ public class ItemRepositoryImpl implements ItemRepository {
                     }
                 }
             }
+            return getItemById(item.getId());
         }
-        return getItemById(item.getId());
     }
 
 
