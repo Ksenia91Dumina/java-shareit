@@ -6,8 +6,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.shareit.item.ItemController;
+import ru.practicum.shareit.user.UserController;
 
-@RestControllerAdvice
+@RestControllerAdvice(assignableTypes = {
+        UserController.class,
+        ItemController.class
+})
 @Slf4j
 public class ErrorHandler {
     @ExceptionHandler
@@ -18,9 +23,16 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleEmailValidateException(final EmailValidateException e) {
+        log.info("409 {}", e.getMessage(), e);
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handleValidationException(final NotAllowedException e) {
-        log.info("404 {}", e.getMessage(), e);
+        log.info("403 {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }
 
@@ -38,10 +50,5 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleEmailValidateException(final EmailValidateException e) {
-        log.info("409 {}", e.getMessage(), e);
-        return new ErrorResponse(e.getMessage());
-    }
+
 }

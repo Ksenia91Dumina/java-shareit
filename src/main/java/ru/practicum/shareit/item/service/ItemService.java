@@ -8,7 +8,7 @@ public interface ItemService {
 
     ItemDto createItem(ItemDto itemDto, long userId);
 
-    ItemDto updateItem(ItemDto itemDto, long userId);
+    ItemDto updateItem(ItemDto itemDto, long userId, long itemId);
 
     List<ItemDto> getAllItems();
 

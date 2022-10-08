@@ -9,9 +9,8 @@ import ru.practicum.shareit.item.model.ItemMapper;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.service.UserService;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,12 +28,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto updateItem(ItemDto itemDto, long userId) {
-        Long itemId = ItemMapper.toItem(itemDto, userId).getId();
-        itemRepository.getItemById(itemId);
+    public ItemDto updateItem(ItemDto itemDto, long userId, long itemId) {
+        getItemById(itemId);
         userService.getUserById(userId);
-        itemRepository.updateItem(itemRepository.getItemById(itemId), userId);
-        return ItemMapper.toItemDto(itemRepository.getItemById(itemId));
+        Item itemToUpdate = ItemMapper.toItem(itemDto, userId);
+        itemToUpdate.setId(itemId);
+        return ItemMapper.toItemDto(itemRepository.updateItem(itemToUpdate, userId));
     }
 
     @Override
@@ -53,33 +52,26 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getItemsByUserId(long userId) {
-        List<ItemDto> allUserItems = new ArrayList<>();
         userService.getUserById(userId);
-        if (!itemRepository.getAllItems().isEmpty()) {
-            for (Item itemToCheck : itemRepository.getAllItems()) {
-                if (itemToCheck.getOwnerId() == userId) {
-                    allUserItems.add(ItemMapper.toItemDto(itemToCheck));
-                }
-            }
-        }
-        return allUserItems;
+        return itemRepository.getAllItems()
+                .stream()
+                .filter(item -> item.getOwnerId() == userId)
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<ItemDto> searchByText(String text) {
         if (text.isEmpty()) {
-            return Collections.emptyList();
+            return List.of();
         }
-        List<ItemDto> availableItems = new ArrayList<>();
-        String textToSearch = text.toLowerCase();
-        for (Item itemToCheck : itemRepository.getAllItems()) {
-            if (itemToCheck.getName().toLowerCase().contains(textToSearch) ||
-                    itemToCheck.getDescription().toLowerCase().contains(textToSearch) &&
-                            itemToCheck.getAvailable()) {
-                availableItems.add(ItemMapper.toItemDto(itemToCheck));
-            }
-        }
-        return availableItems;
+        String searchText = text.toLowerCase();
+        return itemRepository.getAllItems().stream()
+                .filter(item -> item.getName().toLowerCase().contains(searchText)
+                        || item.getDescription().toLowerCase().contains(searchText))
+                .filter(Item::getAvailable)
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
     }
 
     public void deleteItemById(long itemId) {

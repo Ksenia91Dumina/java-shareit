@@ -13,7 +13,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
     private final Map<Long, User> allUsers = new HashMap<>();
-    private long id = 0L;
+    private long id = 0;
 
     @Override
     public User createUser(User user) {
@@ -39,6 +39,7 @@ public class UserRepositoryImpl implements UserRepository {
                     userToCheck.setName(user.getName());
                 }
                 if (user.getEmail() != null) {
+                    checkUserEmailForDuplicate(user);
                     userToCheck.setEmail(user.getEmail());
                 }
             }
@@ -62,8 +63,11 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void deleteUserById(long userId) {
-        if (!allUsers.isEmpty()) {
-            allUsers.remove(userId);
+        for (User userToCheck : getAllUsers()) {
+            if (userToCheck.getId() == userId) {
+                allUsers.remove(userId);
+                break;
+            }
         }
     }
 }

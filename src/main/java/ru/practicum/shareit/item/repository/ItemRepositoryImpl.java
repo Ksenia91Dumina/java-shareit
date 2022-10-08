@@ -14,8 +14,7 @@ import java.util.Map;
 public class ItemRepositoryImpl implements ItemRepository {
 
     private final Map<Long, Item> allItems = new HashMap<>();
-    private long id = 0L;
-
+    private long id = 0;
 
     @Override
     public Item createItem(Item item) {
@@ -31,14 +30,16 @@ public class ItemRepositoryImpl implements ItemRepository {
             throw new NotAllowedException("Пользователь с id = " + userId + " не может внести изменения");
         } else {
             for (Item itemToCheck : getAllItems()) {
-                if (item.getName() != null) {
-                    itemToCheck.setName(item.getName());
-                }
-                if (item.getDescription() != null) {
-                    itemToCheck.setDescription(item.getDescription());
-                }
-                if (item.getAvailable() != itemToCheck.getAvailable()) {
-                    itemToCheck.setAvailable(item.getAvailable());
+                if (itemToCheck.getId() == item.getId()) {
+                    if (item.getName() != null) {
+                        itemToCheck.setName(item.getName());
+                    }
+                    if (item.getDescription() != null) {
+                        itemToCheck.setDescription(item.getDescription());
+                    }
+                    if (item.getAvailable() != null) {
+                        itemToCheck.setAvailable(item.getAvailable());
+                    }
                 }
             }
         }
