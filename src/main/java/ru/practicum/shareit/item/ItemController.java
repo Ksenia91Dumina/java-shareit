@@ -23,27 +23,27 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping
-    public ItemDto createItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public ItemDto createItem(@RequestHeader("X-Sharer-User-Id") long userId,
                               @Validated({Create.class}) @RequestBody ItemDto itemDto) {
         log.info("Получен запрос на добавление предмета");
         return itemService.createItem(itemDto, userId);
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") long userId,
                               @Validated({Update.class}) @RequestBody ItemDto itemDto) {
         log.info("Получен запрос на изменение предмета");
         return itemService.updateItem(itemDto, userId);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItemById(@PathVariable Long itemId) {
+    public ItemDto getItemById(@PathVariable long itemId) {
         log.info("Получен запрос на получение информации по id предмета = " + itemId);
         return itemService.getItemById(itemId);
     }
 
     @GetMapping
-    public List<ItemDto> getItemsByUserId(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public List<ItemDto> getItemsByUserId(@RequestHeader("X-Sharer-User-Id") long userId) {
         log.info("Получен запрос на получение списка предметов пользователя с id = " + userId);
         return itemService.getItemsByUserId(userId);
     }

@@ -26,27 +26,32 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item updateItem(Item item, long userId) {
-        Item itemToCheck = allItems.get(item.getId());
-        if (item.getOwnerId() != userId) {
+        Item itemToUpdate = getItemById(item.getId());
+        if (itemToUpdate.getOwnerId() != userId) {
             throw new NotAllowedException("Пользователь с id = " + userId + " не может внести изменения");
         } else {
-            if (item.getName() != null) {
-                itemToCheck.setName(item.getName());
-            }
-            if (item.getDescription() != null) {
-                itemToCheck.setDescription(item.getDescription());
-            }
-            if (item.getAvailable() != itemToCheck.getAvailable()) {
-                itemToCheck.setAvailable(item.getAvailable());
+            for (Item itemToCheck : getAllItems()) {
+                if (item.getName() != null) {
+                    itemToCheck.setName(item.getName());
+                }
+                if (item.getDescription() != null) {
+                    itemToCheck.setDescription(item.getDescription());
+                }
+                if (item.getAvailable() != itemToCheck.getAvailable()) {
+                    itemToCheck.setAvailable(item.getAvailable());
+                }
             }
         }
-        return itemToCheck;
+        return getItemById(item.getId());
     }
 
 
     @Override
     public Item getItemById(long itemId) {
-        return allItems.get(itemId);
+        return getAllItems().stream()
+                .filter(item -> item.getId() == itemId)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

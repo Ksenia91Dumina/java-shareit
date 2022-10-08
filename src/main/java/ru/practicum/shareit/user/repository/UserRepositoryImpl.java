@@ -25,7 +25,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     public void checkUserEmailForDuplicate(User user) {
         for (User userToCheck : getAllUsers()) {
-            if (user.getEmail().equals(userToCheck.getEmail())) {
+            if (userToCheck.getEmail().equals(user.getEmail())) {
                 throw new EmailValidateException("Пользователь с почтой " + user.getEmail() + " уже существует");
             }
         }
@@ -33,15 +33,17 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User updateUser(User user) {
-        checkUserEmailForDuplicate(user);
-        User userToCheck = allUsers.get(user.getId());
-        if (user.getName() != null) {
-            userToCheck.setName(user.getName());
+        for (User userToCheck : getAllUsers()) {
+            if (userToCheck.getId() == user.getId()) {
+                if (user.getName() != null) {
+                    userToCheck.setName(user.getName());
+                }
+                if (user.getEmail() != null) {
+                    userToCheck.setEmail(user.getEmail());
+                }
+            }
         }
-        if (user.getEmail() != null) {
-            userToCheck.setEmail(user.getEmail());
-        }
-        return userToCheck;
+        return getUserById(user.getId());
     }
 
 
@@ -52,7 +54,10 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User getUserById(long userId) {
-        return allUsers.get(userId);
+        return getAllUsers().stream()
+                .filter(user -> user.getId() == userId)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
