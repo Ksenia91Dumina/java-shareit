@@ -23,7 +23,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleEmailValidateException(final EmailValidateException e) {
+    public ErrorResponse handleEmailValidateException(final ValidateException e) {
         log.info("409 {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }

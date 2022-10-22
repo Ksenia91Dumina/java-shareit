@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Component("ItemRepository")
 @RequiredArgsConstructor
-public class ItemRepositoryImpl implements ItemRepository {
+public class ItemRepositoryOldImpl implements ItemRepositoryOld {
 
     private final Map<Long, Item> allItems = new HashMap<>();
     private long id = 0;

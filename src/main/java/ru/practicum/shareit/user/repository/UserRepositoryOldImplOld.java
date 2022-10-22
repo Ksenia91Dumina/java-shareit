@@ -2,7 +2,7 @@ package ru.practicum.shareit.user.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.exception.EmailValidateException;
+import ru.practicum.shareit.exception.ValidateException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Component("UserRepository")
 @RequiredArgsConstructor
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryOldImplOld implements UserRepositoryOld {
     private final Map<Long, User> allUsers = new HashMap<>();
     private long id = 0;
 
@@ -26,7 +26,7 @@ public class UserRepositoryImpl implements UserRepository {
     public void checkUserEmailForDuplicate(User user) {
         for (User userToCheck : getAllUsers()) {
             if (userToCheck.getEmail().equals(user.getEmail())) {
-                throw new EmailValidateException("Пользователь с почтой " + user.getEmail() + " уже существует");
+                throw new ValidateException("Пользователь с почтой " + user.getEmail() + " уже существует");
             }
         }
     }
