@@ -21,26 +21,26 @@ public class BookingController {
     private final BookingService service;
 
     @PostMapping
-    public BookingOutput add(@Validated({Create.class}) @RequestBody BookingDto bookingDto,
-                             @RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("Получен запрос на добавление бронирования.");
+    public BookingOutput addBooking(@Validated({Create.class}) @RequestBody BookingDto bookingDto,
+                                    @RequestHeader("X-Sharer-User-Id") long userId) {
+        log.info("Получен запрос на добавление бронирования");
         validateBookingDate(bookingDto);
         return service.addBooking(bookingDto, userId);
 
     }
 
     @PatchMapping("/{bookingId}")
-    public BookingOutput update(@PathVariable long bookingId,
-                                @RequestParam boolean approved,
-                                @RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("Получен запрос на изменение бронирования.");
+    public BookingOutput updateBooking(@PathVariable long bookingId,
+                                       @RequestParam boolean approved,
+                                       @RequestHeader("X-Sharer-User-Id") long userId) {
+        log.info("Получен запрос на подтверждение бронирования");
         return service.updateBooking(bookingId, approved, userId);
     }
 
     @GetMapping("/{bookingId}")
     public BookingOutput getBooking(@PathVariable long bookingId,
                                     @RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("Получен запрос на поиск информации по id бронирования.");
+        log.info("Получен запрос на поиск информации по id бронирования");
         return service.getBookingById(bookingId, userId);
     }
 

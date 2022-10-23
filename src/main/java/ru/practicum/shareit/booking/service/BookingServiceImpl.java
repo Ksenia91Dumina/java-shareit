@@ -68,10 +68,10 @@ public class BookingServiceImpl implements BookingService {
                 }
                 return BookingMapper.toBookingOutput(bookingRepository.save(booking.get()));
             } else {
-                throw new NotFoundException(String.format("Пользователь с id = " + userId + " не найден"));
+                throw new NotFoundException("Пользователь с id = " + userId + " не найден");
             }
         } else {
-            throw new NotFoundException(String.format("Бронирование с id = " + bookingId + " не найдено"));
+            throw new NotFoundException("Бронирование с id = " + bookingId + " не найдено");
         }
     }
 
@@ -85,10 +85,10 @@ public class BookingServiceImpl implements BookingService {
             if (booking.get().getBooker().getId() == userId || item.getOwnerId() == userId) {
                 return BookingMapper.toBookingOutput(booking.get());
             } else {
-                throw new NotFoundException(String.format("Пользователь с id = " + userId + " не найден"));
+                throw new NotFoundException("Пользователь с id = " + userId + " не найден");
             }
         } else {
-            throw new NotFoundException(String.format("Бронирование с id = " + bookingId + " не найдено"));
+            throw new NotFoundException("Бронирование с id = " + bookingId + " не найдено");
         }
     }
 

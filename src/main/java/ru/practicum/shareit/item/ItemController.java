@@ -56,6 +56,7 @@ public class ItemController {
     public CommentDto addComment(@PathVariable long itemId,
                                  @RequestHeader("X-Sharer-User-Id") long userId,
                                  @Validated({Create.class}) @RequestBody CommentDto commentDto) {
+        log.info("Получен запрос на добавление комментария к предмету с id = " + itemId);
         return itemService.addComment(commentDto, userId, itemId);
     }
 }
