@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.shareit.booking.BookingController;
 import ru.practicum.shareit.item.ItemController;
 import ru.practicum.shareit.user.UserController;
 
@@ -12,7 +13,8 @@ import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice(assignableTypes = {
         UserController.class,
-        ItemController.class
+        ItemController.class,
+        BookingController.class
 })
 @Slf4j
 public class ErrorHandler {
@@ -25,14 +27,14 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleEmailValidateException(final ValidateException e) {
+    public ErrorResponse handleEmailValidateException(final DuplicateEmailException e) {
         log.info("409 {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse handleValidationException(final NotAllowedException e) {
+    public ErrorResponse handleAccessException(final NotAllowedException e) {
         log.info("403 {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }
@@ -47,6 +49,13 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleAnotherException(final ConstraintViolationException e) {
+        log.info("400 {}", e.getMessage(), e);
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleValidateException(final ValidateException e) {
         log.info("400 {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }

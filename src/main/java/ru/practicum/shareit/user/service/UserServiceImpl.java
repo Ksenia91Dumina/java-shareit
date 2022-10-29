@@ -3,9 +3,9 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exception.DuplicateEmailException;
 import ru.practicum.shareit.exception.NotAllowedException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidateException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.model.UserMapper;
@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
             User user = UserMapper.toUser(userDto);
             return UserMapper.toUserDto(userRepository.save(user));
         } catch (Exception e) {
-            throw new ValidateException("Пользователь с почтой " + userDto.getEmail() + " уже существует");
+            throw new DuplicateEmailException("Пользователь с почтой " + userDto.getEmail() + " уже существует");
         }
     }
 
@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
 
     public void checkUserEmailForDuplicate(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new ValidateException("Пользователь с почтой " + user.getEmail() + " уже существует");
+            throw new DuplicateEmailException("Пользователь с почтой " + user.getEmail() + " уже существует");
         }
     }
 }
