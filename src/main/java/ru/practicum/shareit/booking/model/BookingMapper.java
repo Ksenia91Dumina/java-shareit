@@ -1,10 +1,8 @@
 package ru.practicum.shareit.booking.model;
 
-import lombok.RequiredArgsConstructor;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOutput;
 
-@RequiredArgsConstructor
 public class BookingMapper {
 
     public static BookingDto toBookingDto(Booking booking) {

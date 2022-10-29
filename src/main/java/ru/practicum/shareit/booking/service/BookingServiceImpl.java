@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOutput;
 import ru.practicum.shareit.booking.model.Booking;
@@ -9,6 +10,7 @@ import ru.practicum.shareit.booking.model.BookingMapper;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.exception.NotAllowedException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidateException;
 import ru.practicum.shareit.item.model.Item;
@@ -16,7 +18,6 @@ import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.model.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
@@ -61,14 +62,16 @@ public class BookingServiceImpl implements BookingService {
                 if (approved) {
                     if (booking.get().getStatus().equals(BookingStatus.APPROVED)) {
                         throw new ValidateException("Статус бронирования уже = APPROVED");
+                    } else {
+                        booking.get().setStatus(BookingStatus.APPROVED);
                     }
-                    booking.get().setStatus(BookingStatus.APPROVED);
                 } else {
                     booking.get().setStatus(BookingStatus.REJECTED);
                 }
                 return BookingMapper.toBookingOutput(bookingRepository.save(booking.get()));
             } else {
-                throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+                throw new NotAllowedException("Пользователь с id = " + userId +
+                        " не может внести изменение в бронирование");
             }
         } else {
             throw new NotFoundException("Бронирование с id = " + bookingId + " не найдено");
@@ -76,7 +79,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    @Transactional
     public BookingOutput getBookingById(long bookingId, long userId) {
         userService.getUserById(userId);
         Optional<Booking> booking = bookingRepository.findById(bookingId);
@@ -85,7 +87,8 @@ public class BookingServiceImpl implements BookingService {
             if (booking.get().getBooker().getId() == userId || item.getOwnerId() == userId) {
                 return BookingMapper.toBookingOutput(booking.get());
             } else {
-                throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+                throw new NotAllowedException("Пользователь с id = " + userId +
+                        " не может внести изменение в бронирование");
             }
         } else {
             throw new NotFoundException("Бронирование с id = " + bookingId + " не найдено");
@@ -93,7 +96,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    @Transactional
     public List<BookingOutput> getBookingsByUserId(BookingState state, long userId) {
         userService.getUserById(userId);
         List<Booking> bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(userId);
@@ -101,8 +103,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    @Transactional
-    public List<BookingOutput> getBookingItemsByOwner(BookingState state, long userId) {
+    public List<BookingOutput> getBookingItemsByOwnerId(BookingState state, long userId) {
         userService.getUserById(userId);
         List<Booking> bookings = bookingRepository.findAllByItem_OwnerIdOrderByStartDesc(userId);
         return filterByState(bookings, state);

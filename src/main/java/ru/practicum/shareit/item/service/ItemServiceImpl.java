@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingMapper;
 import ru.practicum.shareit.booking.model.BookingStatus;
@@ -21,7 +22,6 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
@@ -50,7 +51,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = getItemById(itemId);
         userService.getUserById(userId);
         Item itemToUpdate = ItemMapper.toItem(itemDto, userId);
-        if (getItemById(itemId).getOwnerId() != userId) {
+        if (item.getOwnerId() != userId) {
             throw new NotAllowedException("Пользователь с id = " + userId + " не может внести изменения");
         } else {
             itemToUpdate.setId(itemId);
@@ -72,7 +73,6 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    @Transactional
     public Item getItemById(long itemId) {
         Optional<Item> item = itemRepository.findById(itemId);
         if (!item.isPresent()) {
@@ -82,7 +82,6 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    @Transactional
     public List<ItemDto> getAllItems() {
         return itemRepository.findAll()
                 .stream()
@@ -91,7 +90,6 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    @Transactional
     public List<ItemDto> searchByText(String text) {
         if (text.isEmpty()) {
             return List.of();
@@ -104,7 +102,6 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    @Transactional
     public ItemInfoDto getItemInfoById(long itemId, long userId) {
         ItemInfoDto item = ItemMapper.toItemInfoDto(getItemById(itemId));
         if (item.getOwnerId() == userId) {
@@ -127,7 +124,6 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    @Transactional
     public List<ItemInfoDto> getItemsInfoByUserId(long userId) {
         userService.getUserById(userId);
         List<Item> items = itemRepository.findAllByOwnerId(userId);

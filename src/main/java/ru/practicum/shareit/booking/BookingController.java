@@ -54,12 +54,12 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public List<BookingOutput> getBookingItems(@RequestParam(defaultValue = "ALL", required = false, name = "state")
+    public List<BookingOutput> getBookingItemsByOwnerId(@RequestParam(defaultValue = "ALL", required = false, name = "state")
                                                String stateText, @RequestHeader("X-Sharer-User-Id") long userId) {
         log.info("Получен запрос на поиск бронирования по id владельца");
         BookingState state = BookingState.fromString(stateText);
         validateBookingState(state, stateText);
-        return service.getBookingItemsByOwner(state, userId);
+        return service.getBookingItemsByOwnerId(state, userId);
     }
 
     private void validateBookingDate(BookingDto bookingDto) {
@@ -70,7 +70,7 @@ public class BookingController {
 
     private void validateBookingState(BookingState state, String stateText) {
         if (state == null) {
-            throw new ValidateException("Статус " + stateText + " неизвестен");
+            throw new IllegalArgumentException("Unknown state: " + state);
         }
     }
 }
