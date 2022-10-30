@@ -36,11 +36,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto updateUser(UserDto userDto, long userId) {
-        User userToUpdate = UserMapper.toUser(userDto);
-        checkUserEmailForDuplicate(userToUpdate);
+        checkUserEmailForDuplicate(userDto.getEmail());
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             if (user.get().getId() == userId) {
+                User userToUpdate = UserMapper.toUser(userDto);
                 userToUpdate.setId(userId);
                 if (userToUpdate.getName() == null) {
                     userToUpdate.setName(user.get().getName());
@@ -83,9 +83,9 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
     }
 
-    public void checkUserEmailForDuplicate(User user) {
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new DuplicateEmailException("Пользователь с почтой " + user.getEmail() + " уже существует");
+    private void checkUserEmailForDuplicate(String email) {
+        if (userRepository.existsByEmail(email) && !email.isBlank()) {
+            throw new DuplicateEmailException("Пользователь с почтой " + email + " уже сущетвует");
         }
     }
 }

@@ -9,7 +9,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOutput;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.exception.ValidateException;
 
 import java.util.List;
 
@@ -64,13 +63,13 @@ public class BookingController {
 
     private void validateBookingDate(BookingDto bookingDto) {
         if (!bookingDto.getStart().isBefore(bookingDto.getEnd())) {
-            throw new ValidateException("Дата начала бронирования должна быть раньше даты окончания");
+            throw new IllegalArgumentException("Дата начала бронирования должна быть раньше даты окончания");
         }
     }
 
     private void validateBookingState(BookingState state, String stateText) {
         if (state == null) {
-            throw new IllegalArgumentException("Unknown state: " + state);
+            throw new IllegalArgumentException("Unknown state: " + stateText);
         }
     }
 }

@@ -5,9 +5,6 @@ import lombok.NoArgsConstructor;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemInfoDto;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemMapper {
 
@@ -28,13 +25,6 @@ public class ItemMapper {
                 .available(item.getAvailable())
                 .requestId(item.getRequestId() != null ? item.getRequestId() : null)
                 .build();
-    }
-
-    public static List<ItemDto> getAllItemsToDto(List<Item> items) {
-        return items
-                .stream()
-                .map(ItemMapper::toItemDto)
-                .collect(Collectors.toList());
     }
 
     public static ItemInfoDto toItemInfoDto(Item item) {

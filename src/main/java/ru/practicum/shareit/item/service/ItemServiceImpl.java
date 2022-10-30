@@ -41,8 +41,8 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public ItemDto createItem(ItemDto itemDto, long userId) {
         userService.getUserById(userId);
-        Item item = itemRepository.save(ItemMapper.toItem(itemDto, userId));
-        return ItemMapper.toItemDto(item);
+        Item item = ItemMapper.toItem(itemDto, userId);
+        return ItemMapper.toItemDto(itemRepository.save(item));
     }
 
     @Override
@@ -50,10 +50,10 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto updateItem(ItemDto itemDto, long userId, long itemId) {
         Item item = getItemById(itemId);
         userService.getUserById(userId);
-        Item itemToUpdate = ItemMapper.toItem(itemDto, userId);
         if (item.getOwnerId() != userId) {
             throw new NotAllowedException("Пользователь с id = " + userId + " не может внести изменения");
         } else {
+            Item itemToUpdate = ItemMapper.toItem(itemDto, userId);
             itemToUpdate.setId(itemId);
             if (itemToUpdate.getName() == null) {
                 itemToUpdate.setName(item.getName());

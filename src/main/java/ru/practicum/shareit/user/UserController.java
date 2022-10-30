@@ -12,7 +12,7 @@ import ru.practicum.shareit.user.service.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping(path = "/users")
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {

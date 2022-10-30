@@ -10,7 +10,6 @@ import ru.practicum.shareit.booking.model.BookingMapper;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.exception.NotAllowedException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidateException;
 import ru.practicum.shareit.item.model.Item;
@@ -40,11 +39,13 @@ public class BookingServiceImpl implements BookingService {
         Item item = itemService.getItemById(bookingDto.getItemId());
         booking.setItem(item);
         booking.setStatus(BookingStatus.WAITING);
-        if (item.getOwnerId() != userId) {
-            if (item.getAvailable())
+        Item itemToCheck = itemService.getItemById(booking.getItem().getId());
+        if (itemToCheck.getOwnerId() != userId) {
+            if (itemToCheck.getAvailable()) {
                 return BookingMapper.toBookingOutput(bookingRepository.save(booking));
-            else
+            } else {
                 throw new ValidateException("Предмет с id = " + item.getId() + " недоступен для бронирования");
+            }
         } else {
             throw new NotFoundException("Пользователь с id = " + userId +
                     " не может забронировать предмет с id = " + item.getId());
@@ -70,7 +71,7 @@ public class BookingServiceImpl implements BookingService {
                 }
                 return BookingMapper.toBookingOutput(bookingRepository.save(booking.get()));
             } else {
-                throw new NotAllowedException("Пользователь с id = " + userId +
+                throw new NotFoundException("Пользователь с id = " + userId +
                         " не может внести изменение в бронирование");
             }
         } else {
@@ -87,7 +88,7 @@ public class BookingServiceImpl implements BookingService {
             if (booking.get().getBooker().getId() == userId || item.getOwnerId() == userId) {
                 return BookingMapper.toBookingOutput(booking.get());
             } else {
-                throw new NotAllowedException("Пользователь с id = " + userId +
+                throw new NotFoundException("Пользователь с id = " + userId +
                         " не может внести изменение в бронирование");
             }
         } else {
