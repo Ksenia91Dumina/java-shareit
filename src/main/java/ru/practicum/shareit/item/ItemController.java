@@ -49,7 +49,9 @@ public class ItemController {
     @GetMapping("/search")
     public List<ItemDto> searchByText(@RequestParam(name = "text") String text) {
         log.info("Получен запрос на поиск по тексту");
-        return itemService.searchByText(text);
+        if (text.isEmpty()) {
+            return List.of();
+        } else return itemService.searchByText(text);
     }
 
     @PostMapping("/{itemId}/comment")

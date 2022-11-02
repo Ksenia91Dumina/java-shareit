@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -99,14 +100,16 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingOutput> getBookingsByUserId(BookingState state, long userId) {
         userService.getUserById(userId);
-        List<Booking> bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(userId);
+        List<Booking> bookings = bookingRepository.findAllByBookerId(userId,
+                Sort.by(Sort.Direction.DESC, "start"));
         return filterByState(bookings, state);
     }
 
     @Override
     public List<BookingOutput> getBookingItemsByOwnerId(BookingState state, long userId) {
         userService.getUserById(userId);
-        List<Booking> bookings = bookingRepository.findAllByItem_OwnerIdOrderByStartDesc(userId);
+        List<Booking> bookings = bookingRepository.findAllByItem_OwnerId(userId,
+                Sort.by(Sort.Direction.DESC, "start"));
         return filterByState(bookings, state);
     }
 

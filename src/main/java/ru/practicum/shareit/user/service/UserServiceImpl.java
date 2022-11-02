@@ -42,13 +42,13 @@ public class UserServiceImpl implements UserService {
             if (user.get().getId() == userId) {
                 User userToUpdate = UserMapper.toUser(userDto);
                 userToUpdate.setId(userId);
-                if (userToUpdate.getName() == null) {
-                    userToUpdate.setName(user.get().getName());
+                if (userToUpdate.getName() != null && !userToUpdate.getName().isBlank()) {
+                    user.get().setName(userToUpdate.getName());
                 }
-                if (userToUpdate.getEmail() == null) {
-                    userToUpdate.setEmail(user.get().getEmail());
+                if (userToUpdate.getEmail() != null && !userToUpdate.getEmail().isBlank()) {
+                    user.get().setEmail(userToUpdate.getEmail());
                 }
-                return UserMapper.toUserDto(userRepository.save(userToUpdate));
+                return UserMapper.toUserDto(user.get());
             } else {
                 throw new NotAllowedException("Пользователь с id = " + user.get().getId() +
                         " не может изменить пользователя с id = " + userId);

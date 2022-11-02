@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
@@ -55,19 +56,19 @@ public class ItemServiceImpl implements ItemService {
         } else {
             Item itemToUpdate = ItemMapper.toItem(itemDto, userId);
             itemToUpdate.setId(itemId);
-            if (itemToUpdate.getName() == null) {
-                itemToUpdate.setName(item.getName());
+            if (itemToUpdate.getName() != null && !itemToUpdate.getName().isBlank()) {
+                item.setName(itemToUpdate.getName());
             }
-            if (itemToUpdate.getDescription() == null) {
-                itemToUpdate.setDescription(item.getDescription());
+            if (itemToUpdate.getDescription() != null && !itemToUpdate.getDescription().isBlank()) {
+                item.setDescription(itemToUpdate.getDescription());
             }
-            if (itemToUpdate.getAvailable() == null) {
-                itemToUpdate.setAvailable(item.getAvailable());
+            if (itemToUpdate.getAvailable() != null) {
+                item.setAvailable(itemToUpdate.getAvailable());
             }
-            if (itemToUpdate.getRequestId() == null) {
-                itemToUpdate.setRequestId(item.getRequestId());
+            if (itemToUpdate.getRequestId() != null) {
+                item.setRequestId(itemToUpdate.getRequestId());
             }
-            return ItemMapper.toItemDto(itemRepository.save(itemToUpdate));
+            return ItemMapper.toItemDto(item);
         }
     }
 
@@ -91,10 +92,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> searchByText(String text) {
-        if (text.isEmpty()) {
-            return List.of();
-        }
-        List<Item> items = itemRepository.findAllByNameOrDescriptionContainingIgnoreCase(text, text);
+                List<Item> items = itemRepository.findAllByNameOrDescriptionContainingIgnoreCase(text, text);
         return items.stream()
                 .filter(Item::getAvailable)
                 .map(ItemMapper::toItemDto)
@@ -106,15 +104,17 @@ public class ItemServiceImpl implements ItemService {
         ItemInfoDto item = ItemMapper.toItemInfoDto(getItemById(itemId));
         if (item.getOwnerId() == userId) {
             item.setLastBooking(BookingMapper.toBookingDto(
-                    bookingRepository.findByItem_IdAndEndBeforeAndStatusNotOrderByEndDesc(
+                    bookingRepository.findByItem_IdAndEndBeforeAndStatusNot(
                             item.getId(),
                             LocalDateTime.now(),
-                            BookingStatus.REJECTED)));
+                            BookingStatus.REJECTED,
+                            Sort.by(Sort.Direction.DESC, "end"))));
             item.setNextBooking(BookingMapper.toBookingDto(
-                    bookingRepository.findByItem_IdAndStatusAndStartAfterOrderByStartAsc(
+                    bookingRepository.findByItem_IdAndStatusAndStartAfter(
                             item.getId(),
                             BookingStatus.APPROVED,
-                            LocalDateTime.now())));
+                            LocalDateTime.now(),
+                            Sort.by(Sort.Direction.ASC, "start"))));
         }
         item.setComments(commentRepository.findAllByItemId(itemId).stream()
                 .map(CommentMapper::toCommentDto)
@@ -130,17 +130,19 @@ public class ItemServiceImpl implements ItemService {
         return items.stream()
                 .map(ItemMapper::toItemInfoDto)
                 .peek(i -> i.setLastBooking(BookingMapper.toBookingDto(
-                                bookingRepository.findByItem_IdAndEndBeforeAndStatusNotOrderByEndDesc(
+                                bookingRepository.findByItem_IdAndEndBeforeAndStatusNot(
                                         i.getId(),
                                         LocalDateTime.now(),
-                                        BookingStatus.REJECTED)
+                                        BookingStatus.REJECTED,
+                                        Sort.by(Sort.Direction.DESC, "end"))
                         ))
                 )
                 .peek(i -> i.setNextBooking(BookingMapper.toBookingDto(
-                                bookingRepository.findByItem_IdAndStatusAndStartAfterOrderByStartAsc(
+                                bookingRepository.findByItem_IdAndStatusAndStartAfter(
                                         i.getId(),
                                         BookingStatus.APPROVED,
-                                        LocalDateTime.now())
+                                        LocalDateTime.now(),
+                                        Sort.by(Sort.Direction.ASC, "start"))
                         ))
                 )
                 .peek(i -> {
@@ -151,6 +153,7 @@ public class ItemServiceImpl implements ItemService {
                 .sorted((i1, i2) -> (int) (i1.getId() - i2.getId()))
                 .collect(Collectors.toList());
     }
+
 
     @Override
     @Transactional
