@@ -51,7 +51,8 @@ public class ItemController {
         log.info("Получен запрос на поиск по тексту");
         if (text.isEmpty()) {
             return List.of();
-        } else return itemService.searchByText(text);
+        }
+        return itemService.searchByText(text);
     }
 
     @PostMapping("/{itemId}/comment")

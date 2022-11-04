@@ -57,26 +57,23 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public BookingOutput updateBooking(long bookingId, boolean approved, long userId) {
         userService.getUserById(userId);
-        Optional<Booking> booking = bookingRepository.findById(bookingId);
-        if (booking.isPresent()) {
-            Item item = itemService.getItemById(booking.get().getItem().getId());
-            if (item.getOwnerId() == userId) {
-                if (approved) {
-                    if (booking.get().getStatus().equals(BookingStatus.APPROVED)) {
-                        throw new ValidateException("Статус бронирования уже = APPROVED");
-                    } else {
-                        booking.get().setStatus(BookingStatus.APPROVED);
-                    }
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() ->
+                new NotFoundException("Бронирование с id = " + bookingId + " не найдено"));
+        Item item = itemService.getItemById(booking.getItem().getId());
+        if (item.getOwnerId() == userId) {
+            if (approved) {
+                if (booking.getStatus().equals(BookingStatus.APPROVED)) {
+                    throw new ValidateException("Статус бронирования уже = APPROVED");
                 } else {
-                    booking.get().setStatus(BookingStatus.REJECTED);
+                    booking.setStatus(BookingStatus.APPROVED);
                 }
-                return BookingMapper.toBookingOutput(bookingRepository.save(booking.get()));
             } else {
-                throw new NotFoundException("Пользователь с id = " + userId +
-                        " не может внести изменение в бронирование");
+                booking.setStatus(BookingStatus.REJECTED);
             }
+            return BookingMapper.toBookingOutput(bookingRepository.save(booking));
         } else {
-            throw new NotFoundException("Бронирование с id = " + bookingId + " не найдено");
+            throw new NotFoundException("Пользователь с id = " + userId +
+                    " не может внести изменение в бронирование");
         }
     }
 

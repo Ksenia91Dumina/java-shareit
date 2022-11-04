@@ -12,7 +12,6 @@ import ru.practicum.shareit.user.model.UserMapper;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,24 +36,21 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto updateUser(UserDto userDto, long userId) {
         checkUserEmailForDuplicate(userDto.getEmail());
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            if (user.get().getId() == userId) {
-                User userToUpdate = UserMapper.toUser(userDto);
-                userToUpdate.setId(userId);
-                if (userToUpdate.getName() != null && !userToUpdate.getName().isBlank()) {
-                    user.get().setName(userToUpdate.getName());
-                }
-                if (userToUpdate.getEmail() != null && !userToUpdate.getEmail().isBlank()) {
-                    user.get().setEmail(userToUpdate.getEmail());
-                }
-                return UserMapper.toUserDto(user.get());
-            } else {
-                throw new NotAllowedException("Пользователь с id = " + user.get().getId() +
-                        " не может изменить пользователя с id = " + userId);
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new NotFoundException("Пользователь с id = " + userId + " не найден"));
+        if (user.getId() == userId) {
+            User userToUpdate = UserMapper.toUser(userDto);
+            userToUpdate.setId(userId);
+            if (userToUpdate.getName() != null && !userToUpdate.getName().isBlank()) {
+                user.setName(userToUpdate.getName());
             }
+            if (userToUpdate.getEmail() != null && !userToUpdate.getEmail().isBlank()) {
+                user.setEmail(userToUpdate.getEmail());
+            }
+            return UserMapper.toUserDto(user);
         } else {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+            throw new NotAllowedException("Пользователь с id = " + user.getId() +
+                    " не может изменить пользователя с id = " + userId);
         }
     }
 
@@ -68,11 +64,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        if (!user.isPresent()) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
-        }
-        return UserMapper.toUserDto(user.get());
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new NotFoundException("Пользователь с id = " + userId + " не найден"));
+        return UserMapper.toUserDto(user);
     }
 
 

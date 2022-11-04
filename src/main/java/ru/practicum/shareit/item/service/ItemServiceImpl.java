@@ -25,7 +25,6 @@ import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,11 +74,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item getItemById(long itemId) {
-        Optional<Item> item = itemRepository.findById(itemId);
-        if (!item.isPresent()) {
-            throw new NotFoundException("Item с id = " + itemId + " не найден");
-        }
-        return item.get();
+        Item item = itemRepository.findById(itemId).orElseThrow(() ->
+                new NotFoundException("Item с id = " + itemId + " не найден"));
+        return item;
     }
 
     @Override
