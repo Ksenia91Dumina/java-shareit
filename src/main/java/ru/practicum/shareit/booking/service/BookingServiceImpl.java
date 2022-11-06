@@ -108,9 +108,10 @@ public class BookingServiceImpl implements BookingService {
             case CURRENT: {
                 bookings = bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfter(userId,
                         LocalDateTime.now(), LocalDateTime.now(), newestFirst);
+                break;
             }
             case FUTURE: {
-                bookings = bookingRepository.findAllByBookerIdAndStartIsAfter(userId,
+                bookings = bookingRepository.findAllByBookerIdAndStartAfter(userId,
                         LocalDateTime.now(), newestFirst);
                 break;
             }
@@ -150,9 +151,10 @@ public class BookingServiceImpl implements BookingService {
             case CURRENT: {
                 bookings = bookingRepository.findAllByItem_OwnerIdAndStartBeforeAndEndAfter(userId,
                         LocalDateTime.now(), LocalDateTime.now(), newestFirst);
+                break;
             }
             case FUTURE: {
-                bookings = bookingRepository.findAllByItem_OwnerIdAndStartIsAfter(userId,
+                bookings = bookingRepository.findAllByItem_OwnerIdAndStartAfter(userId,
                         LocalDateTime.now(), newestFirst);
                 break;
             }
