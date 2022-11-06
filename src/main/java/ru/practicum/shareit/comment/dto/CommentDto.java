@@ -5,6 +5,7 @@ import lombok.Data;
 import ru.practicum.shareit.Create;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,6 +14,7 @@ public class CommentDto {
 
     private long id;
     @NotBlank(groups = {Create.class})
+    @Size(max = 4000)
     private String text;
     private String authorName;
     private long itemId;

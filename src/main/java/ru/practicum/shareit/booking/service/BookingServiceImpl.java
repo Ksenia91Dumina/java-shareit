@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
@@ -97,51 +98,84 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingOutput> getBookingsByUserId(BookingState state, long userId) {
         userService.getUserById(userId);
-        List<Booking> bookings = bookingRepository.findAllByBookerId(userId,
-                Sort.by(Sort.Direction.DESC, "start"));
-        return filterByState(bookings, state);
+        Sort newestFirst = Sort.by(Sort.Direction.DESC, "start");
+        List<Booking> bookings = bookingRepository.findAll();
+        switch (state) {
+            case ALL: {
+                bookings = bookingRepository.findAllByBookerId(userId, newestFirst);
+                break;
+            }
+            case CURRENT: {
+                bookings = bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfter(userId,
+                        LocalDateTime.now(), LocalDateTime.now(), newestFirst);
+            }
+            case FUTURE: {
+                bookings = bookingRepository.findAllByBookerIdAndStartIsAfter(userId,
+                        LocalDateTime.now(), newestFirst);
+                break;
+            }
+            case PAST: {
+                bookings = bookingRepository.findAllByBookerIdAndEndBefore(userId,
+                        LocalDateTime.now(), newestFirst);
+                break;
+            }
+            case WAITING: {
+                bookings = bookingRepository.findAllByBookerIdAndStatusEquals(userId,
+                        BookingStatus.WAITING, newestFirst);
+                break;
+            }
+            case REJECTED: {
+                bookings = bookingRepository.findAllByBookerIdAndStatusEquals(userId,
+                        BookingStatus.REJECTED, newestFirst);
+                break;
+            }
+
+        }
+        return bookings.stream()
+                .map(BookingMapper::toBookingOutput)
+                .collect(Collectors.toList());
     }
+
 
     @Override
     public List<BookingOutput> getBookingItemsByOwnerId(BookingState state, long userId) {
         userService.getUserById(userId);
-        List<Booking> bookings = bookingRepository.findAllByItem_OwnerId(userId,
-                Sort.by(Sort.Direction.DESC, "start"));
-        return filterByState(bookings, state);
+        Sort newestFirst = Sort.by(Sort.Direction.DESC, "start");
+        List<Booking> bookings = bookingRepository.findAll();
+        switch (state) {
+            case ALL: {
+                bookings = bookingRepository.findAllByItem_OwnerId(userId, newestFirst);
+                break;
+            }
+            case CURRENT: {
+                bookings = bookingRepository.findAllByItem_OwnerIdAndStartBeforeAndEndAfter(userId,
+                        LocalDateTime.now(), LocalDateTime.now(), newestFirst);
+            }
+            case FUTURE: {
+                bookings = bookingRepository.findAllByItem_OwnerIdAndStartIsAfter(userId,
+                        LocalDateTime.now(), newestFirst);
+                break;
+            }
+            case PAST: {
+                bookings = bookingRepository.findAllByItem_OwnerIdAndEndBefore(userId,
+                        LocalDateTime.now(), newestFirst);
+                break;
+            }
+            case WAITING: {
+                bookings = bookingRepository.findAllByItem_OwnerIdAndStatusEquals(userId,
+                        BookingStatus.WAITING, newestFirst);
+                break;
+            }
+            case REJECTED: {
+                bookings = bookingRepository.findAllByItem_OwnerIdAndStatusEquals(userId,
+                        BookingStatus.REJECTED, newestFirst);
+                break;
+            }
+
+        }
+        return bookings.stream()
+                .map(BookingMapper::toBookingOutput)
+                .collect(Collectors.toList());
     }
 
-    private List<BookingOutput> filterByState(List<Booking> bookings, BookingState state) {
-        if (state.equals(BookingState.CURRENT)) {
-            return bookings.stream()
-                    .filter(booking -> booking.getStart().isBefore(LocalDateTime.now())
-                            && booking.getEnd().isAfter(LocalDateTime.now()))
-                    .map(BookingMapper::toBookingOutput)
-                    .collect(Collectors.toList());
-        } else if (state.equals(BookingState.FUTURE)) {
-            return bookings.stream()
-                    .filter(booking -> booking.getStart().isAfter(LocalDateTime.now())
-                            && !booking.getStatus().equals(BookingStatus.REJECTED))
-                    .map(BookingMapper::toBookingOutput)
-                    .collect(Collectors.toList());
-        } else if (state.equals(BookingState.PAST)) {
-            return bookings.stream()
-                    .filter(booking -> booking.getEnd().isBefore(LocalDateTime.now()))
-                    .map(BookingMapper::toBookingOutput)
-                    .collect(Collectors.toList());
-        } else if (state.equals(BookingState.WAITING)) {
-            return bookings.stream()
-                    .filter(booking -> booking.getStatus().equals(BookingStatus.WAITING))
-                    .map(BookingMapper::toBookingOutput)
-                    .collect(Collectors.toList());
-        } else if (state.equals(BookingState.REJECTED)) {
-            return bookings.stream()
-                    .filter(booking -> booking.getStatus().equals(BookingStatus.REJECTED))
-                    .map(BookingMapper::toBookingOutput)
-                    .collect(Collectors.toList());
-        } else {
-            return bookings.stream()
-                    .map(BookingMapper::toBookingOutput)
-                    .collect(Collectors.toList());
-        }
-    }
 }

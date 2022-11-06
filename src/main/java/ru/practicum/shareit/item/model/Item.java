@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -20,16 +18,12 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotBlank
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 255)
     private String name;
-    @NotBlank
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, length = 4000)
     private String description;
-    @NotNull
-    @Column(name = "is_available", nullable = false)
+    @Column(name = "available", nullable = false)
     private Boolean available;
-    @NotNull
     @Column(name = "owner_id", nullable = false)
     private long ownerId;
     @Column(name = "request_id")

@@ -89,9 +89,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> searchByText(String text) {
-                List<Item> items = itemRepository.findAllByNameOrDescriptionContainingIgnoreCase(text, text);
+        List<Item> items = itemRepository.findAllByNameOrDescriptionContainingIgnoreCaseAndAvailableEquals(
+                text, text, true);
         return items.stream()
-                .filter(Item::getAvailable)
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }

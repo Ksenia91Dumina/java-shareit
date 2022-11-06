@@ -49,7 +49,7 @@ public class ItemController {
     @GetMapping("/search")
     public List<ItemDto> searchByText(@RequestParam(name = "text") String text) {
         log.info("Получен запрос на поиск по тексту");
-        if (text.isEmpty()) {
+        if (text.isBlank()) {
             return List.of();
         }
         return itemService.searchByText(text);
