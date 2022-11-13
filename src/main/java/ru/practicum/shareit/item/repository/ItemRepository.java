@@ -11,4 +11,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
                                                                                 String description, Boolean available);
 
     List<Item> findAllByOwnerId(long userId);
+
+    List<Item> findAllByRequestId(long requestId);
 }
