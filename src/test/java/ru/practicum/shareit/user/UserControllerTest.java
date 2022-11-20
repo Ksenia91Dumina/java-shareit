@@ -30,7 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(UserController.class)
 @AutoConfigureMockMvc
 class UserControllerTest {
-    private final ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    ObjectMapper mapper;
     @MockBean
     UserService userService;
     @InjectMocks
@@ -52,7 +53,7 @@ class UserControllerTest {
 
     @Test
     void createUserTest() throws Exception {
-        when(userService.createUser(any()))
+        when(userService.createUser(any(UserDto.class)))
                 .thenReturn(userDto1);
 
         mvc.perform(post("/users")
@@ -68,7 +69,7 @@ class UserControllerTest {
 
     @Test
     void updateUserTest() throws Exception {
-        when(userService.updateUser(any(), anyLong()))
+        when(userService.updateUser(any(UserDto.class), anyLong()))
                 .thenReturn(userDto1);
 
         mvc.perform(patch("/users/1")

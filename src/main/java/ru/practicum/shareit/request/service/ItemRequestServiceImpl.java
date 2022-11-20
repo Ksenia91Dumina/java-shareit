@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -24,7 +25,9 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ItemRequestServiceImpl implements ItemRequestService {
 
-    private final ItemRequestRepository repository;
+    @Autowired
+    public ItemRequestRepository repository;
+
     private final UserService userService;
     private final ItemRepository itemRepository;
 
@@ -63,14 +66,10 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                     .collect(Collectors.toList());
             result.add(ItemRequestMapper.toItemRequestWithAnswerDto(itemRequest, items));
         });
-        if (size != null) {
             return result.subList(from, requests.size())
                     .stream()
                     .limit(size)
                     .collect(Collectors.toList());
-        } else {
-            return result.subList(from, requests.size());
-        }
     }
 
     @Override

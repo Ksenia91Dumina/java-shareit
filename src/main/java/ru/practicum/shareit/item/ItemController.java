@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.Create;
@@ -10,6 +11,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemInfoDto;
 import ru.practicum.shareit.item.service.ItemService;
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
@@ -41,18 +44,26 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemInfoDto> getItemsInfoByUserId(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public List<ItemInfoDto> getItemsInfoByUserId(@RequestHeader("X-Sharer-User-Id") long userId,
+                    @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                    @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на получение списка предметов пользователя с id = " + userId);
-        return itemService.getItemsInfoByUserId(userId);
+        int page = from / size;
+        final PageRequest pageRequest = PageRequest.of(page, size);
+        return itemService.getItemsInfoByUserId(userId, pageRequest);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> searchByText(@RequestParam(name = "text") String text) {
+    public List<ItemDto> searchByText(@RequestParam(name = "text") String text,
+                     @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                     @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на поиск по тексту");
         if (text.isBlank()) {
             return List.of();
         }
-        return itemService.searchByText(text);
+        int page = from / size;
+        final PageRequest pageRequest = PageRequest.of(page, size);
+        return itemService.searchByText(text, pageRequest);
     }
 
     @PostMapping("/{itemId}/comment")

@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +34,12 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService {
 
-    private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
     private final UserService userService;
+
+    @Autowired
+    public ItemRepository itemRepository;
 
     @Override
     @Transactional
@@ -80,17 +84,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getAllItems() {
-        return itemRepository.findAll()
-                .stream()
-                .map(ItemMapper::toItemDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ItemDto> searchByText(String text) {
+    public List<ItemDto> searchByText(String text, PageRequest pageRequest) {
         List<Item> items = itemRepository.findAllByNameOrDescriptionContainingIgnoreCaseAndAvailableEquals(
-                text, text, true);
+                text, text, true, pageRequest);
         return items.stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
@@ -121,9 +117,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemInfoDto> getItemsInfoByUserId(long userId) {
+    public List<ItemInfoDto> getItemsInfoByUserId(long userId, PageRequest pageRequest) {
         userService.getUserById(userId);
-        List<Item> items = itemRepository.findAllByOwnerId(userId);
+        List<Item> items = itemRepository.findAllByOwnerId(userId, pageRequest);
         return items.stream()
                 .map(ItemMapper::toItemInfoDto)
                 .peek(i -> i.setLastBooking(BookingMapper.toBookingDto(

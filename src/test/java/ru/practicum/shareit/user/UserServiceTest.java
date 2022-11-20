@@ -1,6 +1,5 @@
 package ru.practicum.shareit.user;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.exception.DuplicateEmailException;
@@ -28,11 +29,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class UserServiceTest {
 
     @InjectMocks
     private UserServiceImpl userService;
-
     @Mock
     private UserRepository repository;
 
@@ -51,14 +52,7 @@ public class UserServiceTest {
         repository = mock(UserRepository.class);
         userService = new UserServiceImpl();
         userService.userRepository = repository;
-        userService.createUser(UserMapper.toUserDto(user));
     }
-
-    @AfterEach
-    void afterEach() {
-        repository.deleteAll();
-    }
-
 
     @Test
     public void getUserByIdTest() {
@@ -74,10 +68,11 @@ public class UserServiceTest {
 
     @Test
     public void createTest() {
+        User user3 = new User(3L, "Name_3", "asdf@mail.ru");
         when(repository.save(Mockito.any(User.class)))
-                .thenReturn(new User(3L, "Name_3", "asdf@mail.ru"));
+                .thenReturn(user3);
 
-        UserDto result = userService.createUser(getUserDto());
+        UserDto result = userService.createUser(UserMapper.toUserDto(user3));
 
         Assertions.assertEquals(3, result.getId());
         Assertions.assertEquals("Name_3", result.getName());
@@ -113,13 +108,13 @@ public class UserServiceTest {
     @Test
     public void getNotExistsUserByIdTest() {
         when(repository.findById(Mockito.anyLong()))
-                .thenThrow(new NotFoundException("Пользователь с id = 1 не найден"));
+                .thenThrow(new NotFoundException("Пользователь с id = 5 не найден"));
 
         final NotFoundException exception = Assertions.assertThrows(
                 NotFoundException.class,
-                () -> userService.getUserById(1));
+                () -> userService.getUserById(5));
 
-        Assertions.assertEquals("Пользователь с id = 1 не найден", exception.getMessage());
+        Assertions.assertEquals("Пользователь с id = 5 не найден", exception.getMessage());
     }
 
     @Test
@@ -129,9 +124,9 @@ public class UserServiceTest {
 
         final NotAllowedException exception = Assertions.assertThrows(
                 NotAllowedException.class,
-                () -> userService.updateUser(getUserDto(), 2L));
+                () -> userService.updateUser(getUserDto(), 3L));
 
-        Assertions.assertEquals("Пользователь с id = 1 не может изменить пользователя с id = 2",
+        Assertions.assertEquals("Пользователь с id = 1 не может изменить пользователя с id = 3",
                 exception.getMessage());
     }
 
@@ -149,7 +144,9 @@ public class UserServiceTest {
 
     @Test
     public void updateEmail() {
-        when(repository.save(Mockito.any()))
+        when(repository.findById(Mockito.anyLong()))
+                .thenReturn(Optional.of(user));
+        when(repository.save(Mockito.any(User.class)))
                 .thenReturn(new User(1L, "Name", "new@mail.com"));
 
         var result = userService.updateUser(UserDto.builder().email("new@mail.com").build(), 1L);
@@ -161,7 +158,9 @@ public class UserServiceTest {
 
     @Test
     public void updateName() {
-        when(repository.save(Mockito.any()))
+        when(repository.findById(Mockito.anyLong()))
+                .thenReturn(Optional.of(user));
+        when(repository.save(Mockito.any(User.class)))
                 .thenReturn(new User(1L, "new_name", "qwer@mail.ru"));
 
         var result = userService.updateUser(UserDto.builder().name("new_name").build(), 1L);
@@ -170,4 +169,5 @@ public class UserServiceTest {
         Assertions.assertEquals("new_name", result.getName());
         Assertions.assertEquals("qwer@mail.ru", result.getEmail());
     }
+
 }
