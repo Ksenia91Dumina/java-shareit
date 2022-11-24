@@ -23,17 +23,17 @@ public class ItemRequestMapper {
         return ItemRequestDto.builder()
                 .id(itemRequest.getId())
                 .description(itemRequest.getDescription())
-                .requester(itemRequest.getRequester())
+                .requester(new ItemRequestDto.Requester(itemRequest.getRequester()))
                 .created(itemRequest.getCreated())
                 .build();
     }
 
     public static ItemRequestOutput toItemRequestWithAnswerDto(ItemRequest itemRequest,
-                                                                         List<ItemByRequestDto> items) {
+                                                               List<ItemByRequestDto> items) {
         return ItemRequestOutput.builder()
                 .id(itemRequest.getId())
                 .description(itemRequest.getDescription())
-                .requester(itemRequest.getRequester())
+                .requester(new ItemRequestOutput.Requester((itemRequest.getRequester())))
                 .created(itemRequest.getCreated())
                 .items(items)
                 .build();

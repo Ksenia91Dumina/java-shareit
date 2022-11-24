@@ -9,6 +9,7 @@ import javax.validation.constraints.Future;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Data
 @Builder
@@ -26,4 +27,17 @@ public class BookingDto {
     @NotNull(groups = {Create.class})
     private long bookerId;
     private BookingStatus status;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BookingDto that = (BookingDto) o;
+        return id == that.id && itemId == that.itemId && bookerId == that.bookerId && Objects.equals(start, that.start) && Objects.equals(end, that.end) && status == that.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, start, end, itemId, bookerId, status);
+    }
 }

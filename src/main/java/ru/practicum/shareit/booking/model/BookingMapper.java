@@ -33,8 +33,8 @@ public class BookingMapper {
                 .id(booking.getId())
                 .start(booking.getStart())
                 .end(booking.getEnd())
-                .booker(booking.getBooker())
-                .item(booking.getItem())
+                .booker(new BookingOutput.Booker(booking.getBooker()))
+                .item(new BookingOutput.Item(booking.getItem()))
                 .status(booking.getStatus())
                 .build();
     }

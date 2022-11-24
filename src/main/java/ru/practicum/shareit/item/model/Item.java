@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -29,4 +30,16 @@ public class Item {
     @Column(name = "request_id")
     private Long requestId;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return id == item.id && ownerId == item.ownerId && Objects.equals(name, item.name) && Objects.equals(description, item.description) && Objects.equals(available, item.available) && Objects.equals(requestId, item.requestId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, available, ownerId, requestId);
+    }
 }

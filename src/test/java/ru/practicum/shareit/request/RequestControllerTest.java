@@ -40,14 +40,14 @@ public class RequestControllerTest {
             .id(1L)
             .description("Request text_1")
             .created(LocalDateTime.of(2020, 1, 1, 1, 1, 1))
-            .requester(new User(1L, "Name", "qwer@mail.ru"))
+            .requester(new ItemRequestDto.Requester(new User(1L, "Name", "qwer@mail.ru")))
             .build();
 
     private final ItemRequestOutput itemRequestOutput = ItemRequestOutput.builder()
             .id(2L)
             .description("Request text_2")
             .created(LocalDateTime.of(2020, 1, 1, 1, 1, 1))
-            .requester(new User(1L, "Name", "qwer@mail.ru"))
+            .requester(new ItemRequestOutput.Requester(new User(1L, "Name", "qwer@mail.ru")))
             .items(List.of(ItemByRequestDto.builder().id(1L).build()))
             .build();
 
@@ -65,7 +65,8 @@ public class RequestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(requestDto.getId()), Long.class))
                 .andExpect(jsonPath("$.description", is(String.valueOf(requestDto.getDescription()))))
-                .andExpect(jsonPath("$.requester", is(requestDto.getRequester()), User.class))
+                .andExpect(jsonPath("$.requester", is(requestDto.getRequester()),
+                        ItemRequestDto.Requester.class))
                 .andExpect(jsonPath("$.created", is(String.valueOf(requestDto.getCreated()))));
     }
 
@@ -82,7 +83,8 @@ public class RequestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", is(itemRequestOutput.getId()), Long.class))
                 .andExpect(jsonPath("$[0].description", is(itemRequestOutput.getDescription())))
-                .andExpect(jsonPath("$[0].requester", is(itemRequestOutput.getRequester()), User.class))
+                .andExpect(jsonPath("$[0].requester", is(itemRequestOutput.getRequester()),
+                        ItemRequestOutput.Requester.class))
                 .andExpect(jsonPath("$[0].created", is(String.valueOf(itemRequestOutput.getCreated()))));
     }
 
@@ -101,7 +103,8 @@ public class RequestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", is(itemRequestOutput.getId()), Long.class))
                 .andExpect(jsonPath("$[0].description", is(itemRequestOutput.getDescription())))
-                .andExpect(jsonPath("$[0].requester", is(itemRequestOutput.getRequester()), User.class))
+                .andExpect(jsonPath("$[0].requester", is(itemRequestOutput.getRequester()),
+                        ItemRequestOutput.Requester.class))
                 .andExpect(jsonPath("$[0].created", is(String.valueOf(itemRequestOutput.getCreated()))));
     }
 
@@ -118,7 +121,8 @@ public class RequestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(itemRequestOutput.getId()), Long.class))
                 .andExpect(jsonPath("$.description", is(itemRequestOutput.getDescription())))
-                .andExpect(jsonPath("$.requester", is(itemRequestOutput.getRequester()), User.class))
+                .andExpect(jsonPath("$.requester", is(itemRequestOutput.getRequester()),
+                        ItemRequestOutput.Requester.class))
                 .andExpect(jsonPath("$.created", is(String.valueOf(itemRequestOutput.getCreated()))));
     }
 }
