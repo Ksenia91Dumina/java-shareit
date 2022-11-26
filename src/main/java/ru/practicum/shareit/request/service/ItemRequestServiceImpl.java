@@ -66,10 +66,14 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                     .collect(Collectors.toList());
             result.add(ItemRequestMapper.toItemRequestWithAnswerDto(itemRequest, items));
         });
+        if (size != null) {
             return result.subList(from, requests.size())
                     .stream()
                     .limit(size)
                     .collect(Collectors.toList());
+        } else {
+            return result.subList(from, requests.size());
+        }
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.Create;
+import ru.practicum.shareit.Update;
 import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemInfoDto;
@@ -32,7 +33,7 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                              @RequestBody ItemDto itemDto, @PathVariable long itemId) {
+                              @Validated({Update.class}) @RequestBody ItemDto itemDto, @PathVariable long itemId) {
         log.info("Получен запрос на изменение предмета");
         return itemService.updateItem(itemDto, userId, itemId);
     }

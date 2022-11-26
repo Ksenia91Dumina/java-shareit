@@ -48,7 +48,6 @@ public class BookingServiceTest {
     private UserService userService;
 
     private final User user = new User(1, "Name", "qwer@mail.ru");
-    private final User owner = new User(2, "Owner", "asdf@mail.ru");
 
     private final Booking booking1 = new Booking(1,
             LocalDateTime.of(2022, 10, 1, 1, 1),

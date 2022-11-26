@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS REQUESTS
     requester_id BIGINT NOT NULL,
     created TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     constraint pk_item_requests primary key(id),
-    constraint fk_item_requests_on_requestor foreign key(requestor_id) references USERS(id) ON DELETE CASCADE
+    constraint fk_item_requests_on_requester foreign key(requester_id) references USERS(id) ON DELETE CASCADE
     );
 
 CREATE TABLE IF NOT EXISTS ITEMS
