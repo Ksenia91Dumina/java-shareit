@@ -13,6 +13,7 @@ import ru.practicum.shareit.booking.model.BookingMapper;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.exception.NotAllowedException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidateException;
 import ru.practicum.shareit.item.model.Item;
@@ -76,7 +77,7 @@ public class BookingServiceImpl implements BookingService {
             }
             return BookingMapper.toBookingOutput(bookingRepository.save(booking));
         } else {
-            throw new NotFoundException("Пользователь с id = " + userId +
+            throw new NotAllowedException("Пользователь с id = " + userId +
                     " не может внести изменение в бронирование");
         }
     }

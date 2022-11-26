@@ -10,6 +10,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOutput;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.exception.ValidateException;
 
 import java.util.List;
 
@@ -46,9 +47,9 @@ public class BookingController {
 
     @GetMapping
     public List<BookingOutput> getBookingsByUserId(@RequestParam(name = "state", defaultValue = "ALL", required = false)
-                               String stateText, @RequestHeader("X-Sharer-User-Id") long userId,
-                                @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                @RequestParam(name = "size", defaultValue = "10") Integer size) {
+                                                   String stateText, @RequestHeader("X-Sharer-User-Id") long userId,
+                                                   @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                   @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на поиск бронирования по id пользователя");
         BookingState state = BookingState.fromString(stateText);
         validateBookingState(state, stateText);
@@ -60,9 +61,9 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingOutput> getBookingItemsByOwnerId(@RequestParam(defaultValue = "ALL", required = false,
-                               name = "state") String stateText, @RequestHeader("X-Sharer-User-Id") long userId,
-                                @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                @RequestParam(name = "size", defaultValue = "10") Integer size) {
+            name = "state") String stateText, @RequestHeader("X-Sharer-User-Id") long userId,
+                                                        @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                        @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на поиск бронирования по id владельца");
         BookingState state = BookingState.fromString(stateText);
         validateBookingState(state, stateText);
@@ -74,7 +75,7 @@ public class BookingController {
 
     private void validateBookingDate(BookingDto bookingDto) {
         if (!bookingDto.getStart().isBefore(bookingDto.getEnd())) {
-            throw new IllegalArgumentException("Дата начала бронирования должна быть раньше даты окончания");
+            throw new ValidateException("Дата начала бронирования должна быть раньше даты окончания");
         }
     }
 
@@ -86,11 +87,11 @@ public class BookingController {
 
     private void validateParams(int from, Integer size) {
         if (from < 0) {
-            throw new IllegalArgumentException("Параметр from должен быть больше 0");
+            throw new ValidateException("Параметр from должен быть больше 0");
         }
         if (size != null) {
             if (size <= 0) {
-                throw new IllegalArgumentException("Параметр size должен быть больше 0");
+                throw new ValidateException("Параметр size должен быть больше 0");
             }
         }
     }

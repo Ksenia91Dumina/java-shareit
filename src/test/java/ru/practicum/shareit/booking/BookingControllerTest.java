@@ -15,6 +15,7 @@ import ru.practicum.shareit.booking.dto.BookingOutput;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.exception.ValidateException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -136,10 +137,10 @@ public class BookingControllerTest {
     @Test
     void addWrongBookingTest() throws Exception {
         when(bookingService.addBooking(any(BookingDto.class), anyLong()))
-                .thenThrow(new IllegalArgumentException("Дата начала бронирования должна быть раньше даты окончания"));
+                .thenThrow(new ValidateException("Дата начала бронирования должна быть раньше даты окончания"));
 
-        final IllegalArgumentException exception = Assertions.assertThrows(
-                IllegalArgumentException.class,
+        final ValidateException exception = Assertions.assertThrows(
+                ValidateException.class,
                 () -> bookingService.addBooking(bookingDto, 1L));
 
         Assertions.assertEquals("Дата начала бронирования должна быть раньше даты окончания",
