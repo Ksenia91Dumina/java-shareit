@@ -9,8 +9,6 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestOutput;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
@@ -39,9 +37,10 @@ public class ItemRequestController {
     @GetMapping("/all")
     public List<ItemRequestOutput> getRequests(
             @RequestHeader("X-Sharer-User-Id") long userId,
-            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+            @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на получение списка запросов пользователя с id = " + userId);
+        validateParams(from, size);
         return itemRequestService.getAllRequests(userId, from, size);
     }
 
@@ -51,6 +50,17 @@ public class ItemRequestController {
             @PathVariable long requestId) {
         log.info("Получен запрос на получение информации по id  = " + requestId);
         return itemRequestService.getRequestById(requestId, userId);
+    }
+
+    private void validateParams(int from, Integer size) {
+        if (from < 0) {
+            throw new IllegalArgumentException("Parameter from must be => 0");
+        }
+        if (size != null) {
+            if (size <= 0) {
+                throw new IllegalArgumentException("Parameter size must be > 0");
+            }
+        }
     }
 
 }

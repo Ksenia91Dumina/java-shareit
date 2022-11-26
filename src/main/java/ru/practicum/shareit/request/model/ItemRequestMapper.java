@@ -28,7 +28,7 @@ public class ItemRequestMapper {
                 .build();
     }
 
-    public static ItemRequestOutput toItemRequestWithAnswerDto(ItemRequest itemRequest,
+    public static ItemRequestOutput toItemRequestOutput(ItemRequest itemRequest,
                                                                List<ItemByRequestDto> items) {
         return ItemRequestOutput.builder()
                 .id(itemRequest.getId())
