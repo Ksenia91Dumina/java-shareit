@@ -48,6 +48,7 @@ public class BookingServiceTest {
     private UserService userService;
 
     private final User user = new User(1, "Name", "qwer@mail.ru");
+    private final User owner = new User(2, "Owner", "asdf@mail.ru");
 
     private final Booking booking1 = new Booking(1,
             LocalDateTime.of(2022, 10, 1, 1, 1),
@@ -221,12 +222,143 @@ public class BookingServiceTest {
     }
 
     @Test
+    public void getAllBookingItemsByOwnerIdTest() {
+        booking1.getItem().setOwnerId(2);
+        when(repository.findAllByItem_OwnerId(anyLong(), any(Sort.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking1));
+
+        List<BookingOutput> result = bookingService.getBookingItemsByOwnerId(BookingState.ALL,
+                2, PageRequest.ofSize(1));
+
+        Assertions.assertEquals(1, result.get(0).getId());
+        Assertions.assertEquals(LocalDateTime.of(2022, 10, 1, 1, 1),
+                result.get(0).getStart());
+        Assertions.assertEquals(LocalDateTime.of(2022, 11, 1, 1, 1),
+                result.get(0).getEnd());
+        Assertions.assertEquals(1, result.get(0).getBooker().getId());
+        Assertions.assertEquals(BookingStatus.APPROVED, result.get(0).getStatus());
+    }
+
+    @Test
+    public void getPastBookingItemsByOwnerIdTest() {
+        booking1.getItem().setOwnerId(2);
+        when(repository.findAllByItem_OwnerIdAndEndBefore(anyLong(), any(LocalDateTime.class),
+                any(Sort.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking1));
+
+        List<BookingOutput> result = bookingService.getBookingItemsByOwnerId(BookingState.PAST,
+                2, PageRequest.ofSize(1));
+
+        Assertions.assertEquals(1, result.get(0).getId());
+        Assertions.assertEquals(LocalDateTime.of(2022, 10, 1, 1, 1),
+                result.get(0).getStart());
+        Assertions.assertEquals(LocalDateTime.of(2022, 11, 1, 1, 1),
+                result.get(0).getEnd());
+        Assertions.assertEquals(1, result.get(0).getBooker().getId());
+        Assertions.assertEquals(BookingStatus.APPROVED, result.get(0).getStatus());
+    }
+
+    @Test
+    public void getFutureBookingItemsByOwnerIdTest() {
+        Booking booking3 = new Booking(1,
+                LocalDateTime.of(2022, 12, 1, 1, 1),
+                LocalDateTime.of(2022, 12, 30, 1, 1),
+                new Item(), user,
+                BookingStatus.APPROVED
+        );
+        booking3.getItem().setOwnerId(2);
+        when(repository.findAllByItem_OwnerIdAndStartAfter(anyLong(), any(LocalDateTime.class),
+                any(Sort.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking3));
+
+        List<BookingOutput> result = bookingService.getBookingItemsByOwnerId(BookingState.FUTURE,
+                2, PageRequest.ofSize(1));
+
+        Assertions.assertEquals(1, result.get(0).getId());
+        Assertions.assertEquals(LocalDateTime.of(2022, 12, 1, 1, 1),
+                result.get(0).getStart());
+        Assertions.assertEquals(LocalDateTime.of(2022, 12, 30, 1, 1),
+                result.get(0).getEnd());
+        Assertions.assertEquals(1, result.get(0).getBooker().getId());
+        Assertions.assertEquals(BookingStatus.APPROVED, result.get(0).getStatus());
+    }
+
+    @Test
+    public void getWaitingBookingItemsByOwnerIdTest() {
+        booking2.getItem().setOwnerId(2);
+        when(repository.findAllByItem_OwnerIdAndStatusEquals(anyLong(), any(BookingStatus.class),
+                any(Sort.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking2));
+
+        List<BookingOutput> result = bookingService.getBookingItemsByOwnerId(BookingState.WAITING,
+                2, PageRequest.ofSize(1));
+
+        Assertions.assertEquals(1, result.get(0).getId());
+        Assertions.assertEquals(LocalDateTime.of(2022, 12, 1, 1, 1),
+                result.get(0).getStart());
+        Assertions.assertEquals(LocalDateTime.of(2022, 12, 30, 1, 1),
+                result.get(0).getEnd());
+        Assertions.assertEquals(1, result.get(0).getBooker().getId());
+        Assertions.assertEquals(BookingStatus.WAITING, result.get(0).getStatus());
+    }
+
+    @Test
+    public void getRejectedBookingItemsByOwnerIdTest() {
+        Booking booking3 = new Booking(1,
+                LocalDateTime.of(2022, 12, 1, 1, 1),
+                LocalDateTime.of(2022, 12, 10, 1, 1),
+                new Item(), user,
+                BookingStatus.REJECTED
+        );
+        booking3.getItem().setOwnerId(2);
+        when(repository.findAllByItem_OwnerIdAndStatusEquals(anyLong(), any(BookingStatus.class),
+                any(Sort.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking3));
+
+        List<BookingOutput> result = bookingService.getBookingItemsByOwnerId(BookingState.REJECTED,
+                2, PageRequest.ofSize(1));
+
+        Assertions.assertEquals(1, result.get(0).getId());
+        Assertions.assertEquals(LocalDateTime.of(2022, 12, 1, 1, 1),
+                result.get(0).getStart());
+        Assertions.assertEquals(LocalDateTime.of(2022, 12, 10, 1, 1),
+                result.get(0).getEnd());
+        Assertions.assertEquals(1, result.get(0).getBooker().getId());
+        Assertions.assertEquals(BookingStatus.REJECTED, result.get(0).getStatus());
+    }
+
+    @Test
+    public void getCurrentBookingItemsByOwnerIdTest() {
+        Booking booking4 = new Booking(1,
+                LocalDateTime.of(2022, 11, 1, 1, 1),
+                LocalDateTime.of(2022, 12, 10, 1, 1),
+                new Item(), user,
+                BookingStatus.APPROVED
+        );
+        booking4.getItem().setOwnerId(2);
+        when(repository.findAllByItem_OwnerIdAndStartBeforeAndEndAfter(anyLong(), any(LocalDateTime.class),
+                any(LocalDateTime.class), any(Sort.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking4));
+
+        List<BookingOutput> result = bookingService.getBookingItemsByOwnerId(BookingState.CURRENT,
+                2, PageRequest.ofSize(1));
+
+        Assertions.assertEquals(1, result.get(0).getId());
+        Assertions.assertEquals(LocalDateTime.of(2022, 11, 1, 1, 1),
+                result.get(0).getStart());
+        Assertions.assertEquals(LocalDateTime.of(2022, 12, 10, 1, 1),
+                result.get(0).getEnd());
+        Assertions.assertEquals(1, result.get(0).getBooker().getId());
+        Assertions.assertEquals(BookingStatus.APPROVED, result.get(0).getStatus());
+    }
+
+    @Test
     public void getAllBookingsByUserIdTest() {
         when(repository.findAllByBookerId(anyLong(), any(Sort.class), any(PageRequest.class)))
                 .thenReturn(List.of(booking1));
 
         List<BookingOutput> result = bookingService.getBookingsByUserId(BookingState.ALL,
-                1, PageRequest.ofSize(10));
+                1, PageRequest.ofSize(1));
 
         Assertions.assertEquals(1, result.get(0).getId());
         Assertions.assertEquals(LocalDateTime.of(2022, 10, 1, 1, 1),
@@ -244,7 +376,7 @@ public class BookingServiceTest {
                 .thenReturn(List.of(booking1));
 
         List<BookingOutput> result = bookingService.getBookingsByUserId(BookingState.PAST,
-                1, PageRequest.ofSize(10));
+                1, PageRequest.ofSize(1));
 
         Assertions.assertEquals(1, result.get(0).getId());
         Assertions.assertEquals(LocalDateTime.of(2022, 10, 1, 1, 1),

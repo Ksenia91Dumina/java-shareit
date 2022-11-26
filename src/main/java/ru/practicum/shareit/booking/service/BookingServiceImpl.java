@@ -140,7 +140,6 @@ public class BookingServiceImpl implements BookingService {
                 .collect(Collectors.toList());
     }
 
-
     @Override
     public List<BookingOutput> getBookingItemsByOwnerId(BookingState state, long userId, PageRequest pageRequest) {
         userService.getUserById(userId);

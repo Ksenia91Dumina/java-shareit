@@ -115,24 +115,6 @@ public class BookingControllerTest {
     }
 
     @Test
-    void getBookingsByUserIdTest() throws Exception {
-        when(bookingService.getBookingsByUserId(any(BookingState.class), anyLong(), any(PageRequest.class)))
-                .thenReturn(List.of(bookingOutput));
-
-        mvc.perform(get("/bookings")
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1L))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id", is(bookingOutput.getId()), Long.class))
-                .andExpect(jsonPath("$[0].status", is(String.valueOf(bookingOutput.getStatus()))))
-                .andExpect(jsonPath("$[0].booker", is(bookingOutput.getBooker()),
-                        BookingOutput.Booker.class))
-                .andExpect(jsonPath("$[0].item", is(bookingOutput.getItem()), BookingOutput.Item.class));
-    }
-
-    @Test
     void getBookingItemsByOwnerIdTest() throws Exception {
         when(bookingService.getBookingItemsByOwnerId(any(BookingState.class),
                 anyLong(), any(PageRequest.class)))

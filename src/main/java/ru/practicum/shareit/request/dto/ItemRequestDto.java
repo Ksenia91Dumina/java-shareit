@@ -40,11 +40,6 @@ public class ItemRequestDto {
             Requester requester = (Requester) o;
             return id == requester.id && Objects.equals(name, requester.name);
         }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(id, name);
-        }
     }
 
 }
