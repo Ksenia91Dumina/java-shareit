@@ -38,6 +38,11 @@ public class BookingOutput {
             Booker booker = (Booker) o;
             return id == booker.id && Objects.equals(name, booker.name);
         }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, name);
+        }
     }
 
     @Getter
@@ -61,5 +66,9 @@ public class BookingOutput {
             return id == item.id && Objects.equals(name, item.name);
         }
 
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, name);
+        }
     }
 }
