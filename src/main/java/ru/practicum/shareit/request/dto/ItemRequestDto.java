@@ -15,7 +15,7 @@ public class ItemRequestDto {
 
     private long id;
     @NotBlank(groups = {Create.class})
-    @Size(max = 4000)
+    @Size(max = 4000, groups = {Create.class})
     private String description;
     private Requester requester;
     private LocalDateTime created;

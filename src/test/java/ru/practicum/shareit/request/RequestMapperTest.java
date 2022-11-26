@@ -45,13 +45,13 @@ public class RequestMapperTest {
     }
 
     @Test
-    public void maptoItemRequestOutputTest() {
+    public void mapToItemRequestWithAnswerDtoTest() {
         var request = new ItemRequest(1, "Request text_1", user, date);
         List<ItemByRequestDto> items = List.of(
                 ItemByRequestDto.builder().id(1).build(),
                 ItemByRequestDto.builder().id(2).build()
         );
-        ItemRequestOutput result = ItemRequestMapper.toItemRequestOutput(request, items);
+        ItemRequestOutput result = ItemRequestMapper.toItemRequestWithAnswerDto(request, items);
 
         Assertions.assertEquals(1, result.getId());
         Assertions.assertEquals("Request text_1", result.getDescription());
