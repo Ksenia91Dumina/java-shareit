@@ -42,7 +42,7 @@ public class BookingControllerTest {
 
     private final BookingDto bookingDto = BookingDto.builder()
             .id(1L)
-            .start(LocalDateTime.of(2024, 12, 1, 1, 1))
+            .start(LocalDateTime.of(2022, 12, 1, 1, 1))
             .end(LocalDateTime.of(2023, 1, 1, 1, 1))
             .bookerId(1L)
             .itemId(1L)
