@@ -49,7 +49,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                     .stream()
                     .map(ItemMapper::toItemByRequestDto)
                     .collect(Collectors.toList());
-            result.add(ItemRequestMapper.toItemRequestWithAnswerDto(itemRequest, items));
+            result.add(ItemRequestMapper.toItemRequestOutput(itemRequest, items));
         });
         return result;
     }
@@ -64,7 +64,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                     .stream()
                     .map(ItemMapper::toItemByRequestDto)
                     .collect(Collectors.toList());
-            result.add(ItemRequestMapper.toItemRequestWithAnswerDto(itemRequest, items));
+            result.add(ItemRequestMapper.toItemRequestOutput(itemRequest, items));
         });
         if (size != null) {
             return result.subList(from, requests.size())
@@ -85,7 +85,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .stream()
                 .map(ItemMapper::toItemByRequestDto)
                 .collect(Collectors.toList());
-        return ItemRequestMapper.toItemRequestWithAnswerDto(itemRequest, items);
+        return ItemRequestMapper.toItemRequestOutput(itemRequest, items);
     }
 
     private void checkFromParameter(int from, int listSize) {

@@ -79,9 +79,9 @@ public class BookingController {
         }
     }
 
-    private void validateBookingState(BookingState state, String stateText) {
+    public void validateBookingState(BookingState state, String stateText) {
         if (state == null) {
-            throw new IllegalArgumentException("Unknown state: " + stateText);
+            throw new ValidateException("Unknown state: " + stateText);
         }
     }
 

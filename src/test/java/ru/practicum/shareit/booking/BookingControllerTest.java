@@ -136,12 +136,19 @@ public class BookingControllerTest {
 
     @Test
     void addWrongBookingTest() throws Exception {
+        BookingDto bookingDto2 = BookingDto.builder()
+                .id(2L)
+                .start(LocalDateTime.of(2022, 12, 1, 1, 1))
+                .end(LocalDateTime.of(2022, 1, 1, 1, 1))
+                .bookerId(1L)
+                .itemId(1L)
+                .build();
         when(bookingService.addBooking(any(BookingDto.class), anyLong()))
                 .thenThrow(new ValidateException("Дата начала бронирования должна быть раньше даты окончания"));
 
         final ValidateException exception = Assertions.assertThrows(
                 ValidateException.class,
-                () -> bookingService.addBooking(bookingDto, 1L));
+                () -> bookingService.addBooking(bookingDto2, 1L));
 
         Assertions.assertEquals("Дата начала бронирования должна быть раньше даты окончания",
                 exception.getMessage());
@@ -154,5 +161,12 @@ public class BookingControllerTest {
                         .header("X-Sharer-User-Id", 1L))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.error", is(exception.getMessage())));
+    }
+
+    @Test
+    void validateStateTest() {
+        BookingController controller = new BookingController(bookingService);
+        Assertions.assertThrows(ValidateException.class, () ->
+                controller.validateBookingState(null, "NewState"));
     }
 }

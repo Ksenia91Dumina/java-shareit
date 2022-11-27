@@ -52,13 +52,13 @@ public class ItemRequestController {
         return itemRequestService.getRequestById(requestId, userId);
     }
 
-    private void validateParams(int from, Integer size) {
+    public void validateParams(int from, Integer size) {
         if (from < 0) {
-            throw new IllegalArgumentException("Parameter from must be => 0");
+            throw new IllegalArgumentException("Параметр from должен быть больше или равен 0");
         }
         if (size != null) {
             if (size <= 0) {
-                throw new IllegalArgumentException("Parameter size must be > 0");
+                throw new IllegalArgumentException("Параметр size должен быть больше 0");
             }
         }
     }
