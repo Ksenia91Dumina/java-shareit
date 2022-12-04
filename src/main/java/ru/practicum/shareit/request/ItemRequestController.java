@@ -9,12 +9,15 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestOutput;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/requests")
 @Slf4j
+@Validated
 public class ItemRequestController {
 
     private final ItemRequestService itemRequestService;
@@ -37,10 +40,9 @@ public class ItemRequestController {
     @GetMapping("/all")
     public List<ItemRequestOutput> getRequests(
             @RequestHeader("X-Sharer-User-Id") long userId,
-            @RequestParam(name = "from", defaultValue = "0") Integer from,
-            @RequestParam(name = "size", defaultValue = "10") Integer size) {
+            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на получение списка запросов пользователя с id = " + userId);
-        validateParams(from, size);
         return itemRequestService.getAllRequests(userId, from, size);
     }
 
@@ -52,15 +54,5 @@ public class ItemRequestController {
         return itemRequestService.getRequestById(requestId, userId);
     }
 
-    public void validateParams(int from, Integer size) {
-        if (from < 0) {
-            throw new IllegalArgumentException("Параметр from должен быть больше или равен 0");
-        }
-        if (size != null) {
-            if (size <= 0) {
-                throw new IllegalArgumentException("Параметр size должен быть больше 0");
-            }
-        }
-    }
 
 }

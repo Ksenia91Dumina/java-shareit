@@ -7,6 +7,8 @@ import ru.practicum.shareit.user.model.User;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+
+@AllArgsConstructor
 @Data
 @Builder
 public class BookingOutput {

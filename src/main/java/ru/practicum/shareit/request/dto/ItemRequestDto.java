@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Data
+@AllArgsConstructor
 @Builder
 public class ItemRequestDto {
 

@@ -12,12 +12,15 @@ import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exception.ValidateException;
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class BookingController {
     private final BookingService service;
 
@@ -48,12 +51,11 @@ public class BookingController {
     @GetMapping
     public List<BookingOutput> getBookingsByUserId(@RequestParam(name = "state", defaultValue = "ALL", required = false)
                                                    String stateText, @RequestHeader("X-Sharer-User-Id") long userId,
-                                                   @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                                   @RequestParam(name = "size", defaultValue = "10") Integer size) {
+                                                  @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                  @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на поиск бронирования по id пользователя");
         BookingState state = BookingState.fromString(stateText);
         validateBookingState(state, stateText);
-        validateParams(from, size);
         int page = from / size;
         final PageRequest pageRequest = PageRequest.of(page, size);
         return service.getBookingsByUserId(state, userId, pageRequest);
@@ -62,12 +64,11 @@ public class BookingController {
     @GetMapping("/owner")
     public List<BookingOutput> getBookingItemsByOwnerId(@RequestParam(defaultValue = "ALL", required = false,
             name = "state") String stateText, @RequestHeader("X-Sharer-User-Id") long userId,
-                                                        @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                                        @RequestParam(name = "size", defaultValue = "10") Integer size) {
+                                                       @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                        @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на поиск бронирования по id владельца");
         BookingState state = BookingState.fromString(stateText);
         validateBookingState(state, stateText);
-        validateParams(from, size);
         int page = from / size;
         final PageRequest pageRequest = PageRequest.of(page, size);
         return service.getBookingItemsByOwnerId(state, userId, pageRequest);
@@ -85,15 +86,5 @@ public class BookingController {
         }
     }
 
-    private void validateParams(int from, Integer size) {
-        if (from < 0) {
-            throw new ValidateException("Параметр from должен быть больше 0");
-        }
-        if (size != null) {
-            if (size <= 0) {
-                throw new ValidateException("Параметр size должен быть больше 0");
-            }
-        }
-    }
 }
 

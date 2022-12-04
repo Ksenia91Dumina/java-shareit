@@ -20,6 +20,15 @@ public class ItemRequestOutput {
     private LocalDateTime created;
     private List<ItemByRequestDto> items;
 
+    public ItemRequestOutput(long id, String description, Requester requester,
+                             LocalDateTime created, List<ItemByRequestDto> items) {
+        this.id = id;
+        this.description = description;
+        this.requester = requester;
+        this.created = created;
+        this.items = items;
+    }
+
     @Getter
     @Setter
     @NoArgsConstructor

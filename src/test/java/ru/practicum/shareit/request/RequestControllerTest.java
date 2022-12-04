@@ -1,7 +1,6 @@
 package ru.practicum.shareit.request;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -127,12 +126,4 @@ public class RequestControllerTest {
                 .andExpect(jsonPath("$.created", is(String.valueOf(itemRequestOutput.getCreated()))));
     }
 
-    @Test
-    void validateParamsTest() {
-        ItemRequestController controller = new ItemRequestController(requestService);
-        Assertions.assertThrows(IllegalArgumentException.class, () ->
-                controller.validateParams(1, -5));
-        Assertions.assertThrows(IllegalArgumentException.class, () ->
-                controller.validateParams(-1, 5));
-    }
 }

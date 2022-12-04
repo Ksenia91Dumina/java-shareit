@@ -39,9 +39,9 @@ public class RequestServiceTest {
     @Mock
     private ItemRepository itemRepository;
 
-    LocalDateTime date = LocalDateTime.of(2022, 1, 1, 1, 1);
+    private final LocalDateTime date = LocalDateTime.of(2022, 1, 1, 1, 1);
 
-    ItemRequest itemRequest = new ItemRequest(1, "Request text",
+    private final ItemRequest itemRequest = new ItemRequest(1, "Request text",
             new User(1, "Name", "qwer@mail.ru"), date);
 
     private ItemRequestDto getRequestDto() {
@@ -50,7 +50,6 @@ public class RequestServiceTest {
                 .description("Request text_2")
                 .build();
     }
-
 
     @BeforeEach
     void beforeEach() {
@@ -109,18 +108,5 @@ public class RequestServiceTest {
 
         Assertions.assertEquals("Запрос с id = 1 не найден", exception.getMessage());
     }
-
-    @Test
-    public void getRequestsWithWrongFromParamTest() {
-        when(repository.findAllByRequester_IdNotOrderByCreatedDesc(anyLong()))
-                .thenReturn(List.of(itemRequest));
-
-        final IllegalArgumentException exception = Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> requestService.getAllRequests(1, 2, 1));
-
-        Assertions.assertEquals("Параметр from должен быть меньше размера страницы", exception.getMessage());
-    }
-
 
 }

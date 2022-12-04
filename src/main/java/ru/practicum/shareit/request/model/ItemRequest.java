@@ -1,6 +1,5 @@
 package ru.practicum.shareit.request.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,12 +12,10 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "requests")
-@AllArgsConstructor
 @NoArgsConstructor
 public class ItemRequest {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "description", nullable = false)
     private String description;
@@ -27,4 +24,11 @@ public class ItemRequest {
     private User requester;
     @Column(name = "created", nullable = false)
     private LocalDateTime created;
+
+    public ItemRequest(long id, String description, User requester, LocalDateTime created) {
+        this.id = id;
+        this.description = description;
+        this.requester = requester;
+        this.created = created;
+    }
 }

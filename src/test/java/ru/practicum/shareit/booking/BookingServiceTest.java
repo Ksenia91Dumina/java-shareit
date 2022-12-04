@@ -18,7 +18,6 @@ import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.booking.service.BookingServiceImpl;
-import ru.practicum.shareit.exception.NotAllowedException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
@@ -213,8 +212,8 @@ public class BookingServiceTest {
                 .thenReturn(new Item(1L, "Item", "description for Item",
                         true, 1L, null));
 
-        final NotAllowedException exception = Assertions.assertThrows(
-                NotAllowedException.class,
+        final NotFoundException exception = Assertions.assertThrows(
+                NotFoundException.class,
                 () -> bookingService.updateBooking(1L, true, 2L));
 
         Assertions.assertEquals("Пользователь с id = 2 не может внести изменение в бронирование",

@@ -40,28 +40,27 @@ public class BookingControllerTest {
 
     @Autowired
     private MockMvc mvc;
-
     private final BookingDto bookingDto = BookingDto.builder()
             .id(1L)
-            .start(LocalDateTime.of(2022, 12, 1, 1, 1))
-            .end(LocalDateTime.of(2023, 1, 1, 1, 1))
+            .start(LocalDateTime.of(2023, 1, 1, 1, 1))
+            .end(LocalDateTime.of(2024, 1, 1, 1, 1))
             .bookerId(1L)
             .itemId(1L)
             .build();
 
     private final BookingOutput bookingOutput = BookingOutput.builder()
             .id(2L)
-            .start(LocalDateTime.of(2022, 12, 1, 1, 1))
-            .end(LocalDateTime.of(2023, 2, 2, 2, 2))
-            .item(new BookingOutput.Item(new Item(1L, "Item_1", "description for item_1",
+            .start(LocalDateTime.of(2023, 1, 1, 1, 1))
+            .end(LocalDateTime.of(2024, 1, 1, 1, 1))
+            .item(new BookingOutput.Item(new Item(1L, "Name1", "Description",
                     true, 1L, null)))
-            .booker(new BookingOutput.Booker(new User(1L, "Name", "qwer@mail.ru")))
+            .booker(new BookingOutput.Booker(new User(1L, "Name1", "qwer@mail.ru")))
             .status(BookingStatus.WAITING)
             .build();
 
     @Test
-    void addBookingTest() throws Exception {
-        when(bookingService.addBooking(any(BookingDto.class), anyLong()))
+    void addBooking() throws Exception {
+        when(bookingService.addBooking(any(), anyLong()))
                 .thenReturn(bookingOutput);
 
         mvc.perform(post("/bookings")
@@ -75,6 +74,35 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$.status", is(String.valueOf(bookingOutput.getStatus()))))
                 .andExpect(jsonPath("$.booker", is(bookingOutput.getBooker()), BookingOutput.Booker.class))
                 .andExpect(jsonPath("$.item", is(bookingOutput.getItem()), BookingOutput.Item.class));
+    }
+
+    @Test
+    void addWrongBookingTest() throws Exception {
+        BookingDto bookingDto2 = BookingDto.builder()
+                .id(2L)
+                .start(LocalDateTime.of(2022, 12, 1, 1, 1))
+                .end(LocalDateTime.of(2022, 1, 1, 1, 1))
+                .bookerId(1L)
+                .itemId(1L)
+                .build();
+        when(bookingService.addBooking(any(), anyLong()))
+                .thenThrow(new ValidateException("Дата начала бронирования должна быть раньше даты окончания"));
+
+        final ValidateException exception = Assertions.assertThrows(
+                ValidateException.class,
+                () -> bookingService.addBooking(bookingDto2, 1L));
+
+        Assertions.assertEquals("Дата начала бронирования должна быть раньше даты окончания",
+                exception.getMessage());
+
+        mvc.perform(post("/bookings")
+                        .content(mapper.writeValueAsString(bookingDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 1L))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.error", is(exception.getMessage())));
     }
 
     @Test
@@ -132,35 +160,6 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$[0].booker", is(bookingOutput.getBooker()),
                         BookingOutput.Booker.class))
                 .andExpect(jsonPath("$[0].item", is(bookingOutput.getItem()), BookingOutput.Item.class));
-    }
-
-    @Test
-    void addWrongBookingTest() throws Exception {
-        BookingDto bookingDto2 = BookingDto.builder()
-                .id(2L)
-                .start(LocalDateTime.of(2022, 12, 1, 1, 1))
-                .end(LocalDateTime.of(2022, 1, 1, 1, 1))
-                .bookerId(1L)
-                .itemId(1L)
-                .build();
-        when(bookingService.addBooking(any(BookingDto.class), anyLong()))
-                .thenThrow(new ValidateException("Дата начала бронирования должна быть раньше даты окончания"));
-
-        final ValidateException exception = Assertions.assertThrows(
-                ValidateException.class,
-                () -> bookingService.addBooking(bookingDto2, 1L));
-
-        Assertions.assertEquals("Дата начала бронирования должна быть раньше даты окончания",
-                exception.getMessage());
-
-        mvc.perform(post("/bookings")
-                        .content(mapper.writeValueAsString(bookingDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1L))
-                .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.error", is(exception.getMessage())));
     }
 
     @Test

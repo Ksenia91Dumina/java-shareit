@@ -44,6 +44,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         userService.getUserById(userId);
         List<ItemRequest> requests = repository.findAllByRequester_IdOrderByCreatedDesc(userId);
         List<ItemRequestOutput> result = new ArrayList<>();
+
         requests.forEach(itemRequest -> {
             List<ItemByRequestDto> items = itemRepository.findAllByRequestId(itemRequest.getId())
                     .stream()
@@ -57,7 +58,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequestOutput> getAllRequests(long userId, int from, Integer size) {
         List<ItemRequest> requests = repository.findAllByRequester_IdNotOrderByCreatedDesc(userId);
-        checkFromParameter(from, requests.size());
         List<ItemRequestOutput> result = new ArrayList<>();
         requests.forEach(itemRequest -> {
             List<ItemByRequestDto> items = itemRepository.findAllByRequestId(itemRequest.getId())
@@ -66,14 +66,11 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                     .collect(Collectors.toList());
             result.add(ItemRequestMapper.toItemRequestOutput(itemRequest, items));
         });
-        if (size != null) {
-            return result.subList(from, requests.size())
-                    .stream()
-                    .limit(size)
-                    .collect(Collectors.toList());
-        } else {
-            return result.subList(from, requests.size());
-        }
+
+        return result.subList(from, requests.size())
+                .stream()
+                .limit(size)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -88,9 +85,4 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return ItemRequestMapper.toItemRequestOutput(itemRequest, items);
     }
 
-    private void checkFromParameter(int from, int listSize) {
-        if (from > listSize) {
-            throw new IllegalArgumentException("Параметр from должен быть меньше размера страницы");
-        }
-    }
 }
