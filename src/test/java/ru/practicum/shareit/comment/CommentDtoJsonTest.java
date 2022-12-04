@@ -27,10 +27,11 @@ public class CommentDtoJsonTest {
         assertThat(result).hasJsonPath("$.authorName");
         assertThat(result).hasJsonPath("$.itemId");
         assertThat(result).hasJsonPath("$.created");
-        //assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(dto.getId());
+        assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(Math.toIntExact(dto.getId()));
         assertThat(result).extractingJsonPathStringValue("$.text").isEqualTo(dto.getText());
         assertThat(result).extractingJsonPathStringValue("$.authorName").isEqualTo(dto.getAuthorName());
-        //assertThat(result).extractingJsonPathNumberValue("$.itemId").isEqualTo(dto.getItemId());
+        assertThat(result).extractingJsonPathNumberValue("$.itemId").isEqualTo(
+                Math.toIntExact(dto.getItemId()));
     }
 
 }

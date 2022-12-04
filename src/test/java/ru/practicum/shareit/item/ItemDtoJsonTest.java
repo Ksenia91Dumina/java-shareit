@@ -23,11 +23,13 @@ public class ItemDtoJsonTest {
         assertThat(result).hasJsonPath("$.description");
         assertThat(result).hasJsonPath("$.available");
         assertThat(result).hasJsonPath("$.requestId");
-        //assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(dto.getId());
+        assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(
+                Math.toIntExact(dto.getId()));
         assertThat(result).extractingJsonPathStringValue("$.name").isEqualTo(dto.getName());
         assertThat(result).extractingJsonPathStringValue("$.description").isEqualTo(dto.getDescription());
         assertThat(result).extractingJsonPathBooleanValue("$.available").isEqualTo(dto.getAvailable());
-        //assertThat(result).extractingJsonPathNumberValue("$.requestId").isEqualTo(dto.getRequestId());
+        assertThat(result).extractingJsonPathNumberValue("$.requestId").isEqualTo(
+                Math.toIntExact(dto.getRequestId()));
     }
 
 }

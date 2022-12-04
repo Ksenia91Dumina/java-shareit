@@ -28,9 +28,11 @@ public class BookingDtoJsonTest {
         assertThat(result).hasJsonPath("$.itemId");
         assertThat(result).hasJsonPath("$.bookerId");
         assertThat(result).hasJsonPath("$.status");
-        //assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(dto.getId());
-        //assertThat(result).extractingJsonPathNumberValue("$.itemId").isEqualTo(dto.getItemId());
-        //assertThat(result).extractingJsonPathNumberValue("$.bookerId").isEqualTo(dto.getBookerId());
+        assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(Math.toIntExact(dto.getId()));
+        assertThat(result).extractingJsonPathNumberValue("$.itemId").isEqualTo(
+                Math.toIntExact(dto.getItemId()));
+        assertThat(result).extractingJsonPathNumberValue("$.bookerId").isEqualTo(
+                Math.toIntExact(dto.getBookerId()));
     }
 
 }

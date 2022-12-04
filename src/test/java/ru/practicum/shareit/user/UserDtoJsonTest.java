@@ -22,7 +22,7 @@ class UserDtoJsonTest {
         assertThat(result).hasJsonPath("$.id");
         assertThat(result).hasJsonPath("$.name");
         assertThat(result).hasJsonPath("$.email");
-        assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo((int) dto.getId());
+        assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(Math.toIntExact(dto.getId()));
         assertThat(result).extractingJsonPathStringValue("$.name").isEqualTo(dto.getName());
         assertThat(result).extractingJsonPathStringValue("$.email").isEqualTo(dto.getEmail());
     }
