@@ -89,7 +89,7 @@ public class BookingController {
     }
 
     private void checkingParamsForPagination(int from, int size) {
-        if (from >= size) {
+        if (from > size) {
             throw new IllegalArgumentException("Параметр from должен быть меньше размера страницы");
         }
     }
