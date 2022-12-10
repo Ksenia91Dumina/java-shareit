@@ -51,11 +51,12 @@ public class BookingController {
     @GetMapping
     public List<BookingOutput> getBookingsByUserId(@RequestParam(name = "state", defaultValue = "ALL", required = false)
                                                    String stateText, @RequestHeader("X-Sharer-User-Id") long userId,
-                                                  @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                                  @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+                                                   @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                   @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на поиск бронирования по id пользователя");
         BookingState state = BookingState.fromString(stateText);
         validateBookingState(state, stateText);
+        checkingParamsForPagination(from, size);
         int page = from / size;
         final MyPageRequest pageRequest = MyPageRequest.of(page, size);
         return service.getBookingsByUserId(state, userId, pageRequest);
@@ -64,10 +65,11 @@ public class BookingController {
     @GetMapping("/owner")
     public List<BookingOutput> getBookingItemsByOwnerId(@RequestParam(defaultValue = "ALL", required = false,
             name = "state") String stateText, @RequestHeader("X-Sharer-User-Id") long userId,
-                                                       @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                        @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                         @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на поиск бронирования по id владельца");
         BookingState state = BookingState.fromString(stateText);
+        checkingParamsForPagination(from, size);
         validateBookingState(state, stateText);
         int page = from / size;
         final MyPageRequest pageRequest = MyPageRequest.of(page, size);
@@ -83,6 +85,12 @@ public class BookingController {
     public void validateBookingState(BookingState state, String stateText) {
         if (state == null) {
             throw new ValidateException("Unknown state: " + stateText);
+        }
+    }
+
+    private void checkingParamsForPagination(int from, int size) {
+        if (from >= size) {
+            throw new IllegalArgumentException("Параметр from должен быть меньше размера страницы");
         }
     }
 
