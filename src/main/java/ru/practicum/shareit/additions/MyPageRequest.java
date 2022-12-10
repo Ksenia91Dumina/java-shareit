@@ -1,4 +1,4 @@
-package ru.practicum.shareit;
+package ru.practicum.shareit.additions;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;

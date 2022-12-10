@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.shareit.Create;
+import ru.practicum.shareit.additions.Create;
 import ru.practicum.shareit.booking.model.BookingStatus;
 
 import javax.validation.constraints.Future;

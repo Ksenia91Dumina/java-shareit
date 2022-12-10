@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.shareit.Create;
+import ru.practicum.shareit.additions.Create;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

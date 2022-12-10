@@ -1,7 +1,7 @@
 package ru.practicum.shareit.request.dto;
 
 import lombok.*;
-import ru.practicum.shareit.Create;
+import ru.practicum.shareit.additions.Create;
 import ru.practicum.shareit.user.model.User;
 
 import javax.validation.constraints.NotBlank;

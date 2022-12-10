@@ -1,6 +1,6 @@
 package ru.practicum.shareit.user.service;
 
-import ru.practicum.shareit.MyPageRequest;
+import ru.practicum.shareit.additions.MyPageRequest;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 
