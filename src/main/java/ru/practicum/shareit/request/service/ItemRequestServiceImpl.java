@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemByRequestDto;
 import ru.practicum.shareit.item.model.ItemMapper;
 import ru.practicum.shareit.item.repository.ItemRepository;
@@ -42,7 +43,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public ItemRequestOutput getRequestById(long requestId, long userId) {
         userService.getUserById(userId);
         ItemRequest itemRequest = repository.findById(requestId).orElseThrow(() ->
-                new IllegalArgumentException("Запрос с id = " + requestId + " не найден"));
+                new NotFoundException("Запрос с id = " + requestId + " не найден"));
         List<ItemByRequestDto> items = itemRepository.findAllByRequestId(requestId)
                 .stream()
                 .map(ItemMapper::toItemByRequestDto)
@@ -68,6 +69,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public List<ItemRequestOutput> getAllRequests(long userId, int from, Integer size) {
+        userService.getUserById(userId);
         List<ItemRequest> requests = repository.findAllByRequester_IdNotOrderByCreatedDesc(userId);
         List<ItemRequestOutput> result = new ArrayList<>();
         requests.forEach(itemRequest -> {
