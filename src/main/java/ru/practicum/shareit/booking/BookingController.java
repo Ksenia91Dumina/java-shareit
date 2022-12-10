@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.Create;
@@ -57,8 +58,7 @@ public class BookingController {
         BookingState state = BookingState.fromString(stateText);
         validateBookingState(state, stateText);
         checkingParamsForPagination(from, size);
-        int page = from / size;
-        final MyPageRequest pageRequest = MyPageRequest.of(page, size);
+        final MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.unsorted());
         return service.getBookingsByUserId(state, userId, pageRequest);
     }
 
@@ -71,8 +71,7 @@ public class BookingController {
         BookingState state = BookingState.fromString(stateText);
         checkingParamsForPagination(from, size);
         validateBookingState(state, stateText);
-        int page = from / size;
-        final MyPageRequest pageRequest = MyPageRequest.of(page, size);
+        final MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.unsorted());
         return service.getBookingItemsByOwnerId(state, userId, pageRequest);
     }
 
