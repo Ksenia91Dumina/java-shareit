@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.MyPageRequest;
 import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemInfoDto;
@@ -117,7 +117,7 @@ public class ItemControllerTest {
 
     @Test
     void getItemsByUserIdTest() throws Exception {
-        when(itemService.getItemsInfoByUserId(anyLong(), any(PageRequest.class)))
+        when(itemService.getItemsInfoByUserId(anyLong(), any(MyPageRequest.class)))
                 .thenReturn(List.of(itemInfoDto));
 
         mvc.perform(get("/items")
@@ -137,7 +137,7 @@ public class ItemControllerTest {
 
     @Test
     void searchByTextTest() throws Exception {
-        when(itemService.searchByText(anyString(), any(PageRequest.class)))
+        when(itemService.searchByText(anyString(), any(MyPageRequest.class)))
                 .thenReturn(List.of(itemDto));
 
         mvc.perform(get("/items/search")

@@ -47,11 +47,12 @@ public class CommentRepositoryTest {
         Item item = itemRepository.save(new Item(1L, "Name_1", "description for item_1",
                 true, 1, request.getId()));
         this.entityManager.persist(item);
-        this.entityManager.persist(new Comment(1L, "text1", user1,
+        Comment comment1 = repository.save(new Comment(1L, "text1", user1,
                 item.getId(), LocalDateTime.of(2022, 12, 1, 1, 1)));
-        this.entityManager.persist(new Comment(2L, "text2", user2,
+        this.entityManager.persist(comment1);
+        Comment comment2 = repository.save(new Comment(2L, "text2", user2,
                 item.getId(), LocalDateTime.of(2022, 12, 1, 1, 1)));
-        this.entityManager.flush();
+        this.entityManager.persist(comment2);
         entityManager.getEntityManager().getTransaction().commit();
         Set<Comment> test = repository.findAllByItemId(1L);
         assertThat(test.size() == 2);

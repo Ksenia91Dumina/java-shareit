@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 public class ItemDto {
     private long id;
     @NotBlank(groups = {Create.class})
-    @Size(max = 255)
+    @Size(max = 255, groups = {Create.class, Update.class})
     private String name;
     @NotBlank(groups = {Create.class})
     @Size(max = 4000, groups = {Create.class, Update.class})

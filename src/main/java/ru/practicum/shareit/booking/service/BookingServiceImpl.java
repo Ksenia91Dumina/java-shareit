@@ -2,10 +2,10 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.MyPageRequest;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOutput;
 import ru.practicum.shareit.booking.model.Booking;
@@ -99,7 +99,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingOutput> getBookingsByUserId(BookingState state, long userId, PageRequest pageRequest) {
+    public List<BookingOutput> getBookingsByUserId(BookingState state, long userId, MyPageRequest pageRequest) {
         userService.getUserById(userId);
         Sort newestFirst = Sort.by(Sort.Direction.DESC, "start");
         List<Booking> bookings = bookingRepository.findAll();
@@ -141,7 +141,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingOutput> getBookingItemsByOwnerId(BookingState state, long userId, PageRequest pageRequest) {
+    public List<BookingOutput> getBookingItemsByOwnerId(BookingState state, long userId, MyPageRequest pageRequest) {
         userService.getUserById(userId);
         Sort newestFirst = Sort.by(Sort.Direction.DESC, "start");
         List<Booking> bookings = bookingRepository.findAll();

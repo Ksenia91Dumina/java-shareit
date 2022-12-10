@@ -11,7 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import ru.practicum.shareit.MyPageRequest;
 import ru.practicum.shareit.exception.DuplicateEmailException;
 import ru.practicum.shareit.exception.NotAllowedException;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -94,10 +94,10 @@ public class UserServiceTest {
     @Test
     public void getAllUsersTest() {
         final PageImpl<User> userPage = new PageImpl<>(Collections.singletonList(user));
-        when(repository.findAll(PageRequest.ofSize(10)))
+        when(repository.findAll(MyPageRequest.ofSize(10)))
                 .thenReturn(userPage);
 
-        List<UserDto> result = userService.getAllUsers(PageRequest.ofSize(10));
+        List<UserDto> result = userService.getAllUsers(MyPageRequest.ofSize(10));
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.get(0).getId());

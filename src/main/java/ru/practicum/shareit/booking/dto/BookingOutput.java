@@ -4,6 +4,8 @@ import lombok.*;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.user.model.User;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -26,6 +28,8 @@ public class BookingOutput {
     @AllArgsConstructor
     public static class Booker {
         private long id;
+        @NotBlank
+        @Size(max = 255)
         private String name;
 
         public Booker(User booker) {
@@ -53,6 +57,8 @@ public class BookingOutput {
     @AllArgsConstructor
     public static class Item {
         private long id;
+        @NotBlank
+        @Size(max = 255)
         private String name;
 
         public Item(ru.practicum.shareit.item.model.Item mainItem) {

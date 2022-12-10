@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import ru.practicum.shareit.MyPageRequest;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -76,14 +76,14 @@ public class BookingRepositoryTest {
 
     @Test
     void findAllByBookerIdTest() {
-        List<Booking> test = repository.findAllByBookerId(user.getId(), newestFirst, PageRequest.ofSize(1));
+        List<Booking> test = repository.findAllByBookerId(user.getId(), newestFirst, MyPageRequest.ofSize(1));
         assertThat(test.size() == 2);
     }
 
     @Test
     void findAllByItem_OwnerIdTest() {
         List<Booking> test = repository.findAllByItem_OwnerId(owner.getId(), newestFirst,
-                PageRequest.ofSize(1));
+                MyPageRequest.ofSize(1));
 
         assertThat(test.size() == 2);
     }
@@ -99,7 +99,7 @@ public class BookingRepositoryTest {
     void findAllByItem_OwnerIdAndStartAfterTest() {
         List<Booking> test = repository.findAllByItem_OwnerIdAndStartAfter(owner.getId(),
                 LocalDateTime.of(2022, 11, 20, 1, 1), newestFirst,
-                PageRequest.ofSize(1));
+                MyPageRequest.ofSize(1));
         assertThat(test.size() == 1);
         assertThat(test.get(0).equals(booking2));
     }
@@ -108,7 +108,7 @@ public class BookingRepositoryTest {
     void findAllByBookerIdAndStartAfterTest() {
         List<Booking> test = repository.findAllByBookerIdAndStartAfter(user.getId(),
                 LocalDateTime.of(2022, 9, 1, 1, 1), newestFirst,
-                PageRequest.ofSize(1));
+                MyPageRequest.ofSize(1));
         assertThat(test.size() == 2);
         assertThat(test.get(0).equals(booking1));
     }
@@ -117,7 +117,7 @@ public class BookingRepositoryTest {
     void findAllByItem_OwnerIdAndEndBeforeTest() {
         List<Booking> test = repository.findAllByItem_OwnerIdAndEndBefore(owner.getId(),
                 LocalDateTime.of(2022, 12, 31, 1, 1), newestFirst,
-                PageRequest.ofSize(1));
+                MyPageRequest.ofSize(1));
         assertThat(test.size() == 2);
     }
 }

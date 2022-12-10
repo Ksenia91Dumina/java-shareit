@@ -40,6 +40,18 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
+    public ItemRequestOutput getRequestById(long requestId, long userId) {
+        userService.getUserById(userId);
+        ItemRequest itemRequest = repository.findById(requestId).orElseThrow(() ->
+                new NotFoundException("Запрос с id = " + requestId + " не найден"));
+        List<ItemByRequestDto> items = itemRepository.findAllByRequestId(requestId)
+                .stream()
+                .map(ItemMapper::toItemByRequestDto)
+                .collect(Collectors.toList());
+        return ItemRequestMapper.toItemRequestOutput(itemRequest, items);
+    }
+
+    @Override
     public List<ItemRequestOutput> getRequestsByUserId(long userId) {
         userService.getUserById(userId);
         List<ItemRequest> requests = repository.findAllByRequester_IdOrderByCreatedDesc(userId);
@@ -71,18 +83,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .stream()
                 .limit(size)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public ItemRequestOutput getRequestById(long requestId, long userId) {
-        userService.getUserById(userId);
-        ItemRequest itemRequest = repository.findById(requestId).orElseThrow(() ->
-                new NotFoundException("Запрос с id = " + requestId + " не найден"));
-        List<ItemByRequestDto> items = itemRepository.findAllByRequestId(requestId)
-                .stream()
-                .map(ItemMapper::toItemByRequestDto)
-                .collect(Collectors.toList());
-        return ItemRequestMapper.toItemRequestOutput(itemRequest, items);
     }
 
 }

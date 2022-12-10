@@ -2,10 +2,10 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.Create;
+import ru.practicum.shareit.MyPageRequest;
 import ru.practicum.shareit.Update;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
@@ -39,7 +39,7 @@ public class UserController {
                                      @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на получение списка всех пользователей");
         int page = from / size;
-        final PageRequest pageRequest = PageRequest.of(page, size);
+        final MyPageRequest pageRequest = MyPageRequest.of(page, size);
         return userService.getAllUsers(pageRequest);
     }
 

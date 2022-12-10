@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.data.domain.PageRequest;
+import ru.practicum.shareit.MyPageRequest;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.model.ItemRequest;
@@ -66,7 +66,7 @@ public class ItemRepositoryTest {
 
     @Test
     void findAllByOwnerIdTest() {
-        List<Item> test = repository.findAllByOwnerId(user1.getId(), PageRequest.ofSize(1));
+        List<Item> test = repository.findAllByOwnerId(user1.getId(), MyPageRequest.ofSize(1));
         assertThat(test.size() == 2);
     }
 
@@ -79,7 +79,7 @@ public class ItemRepositoryTest {
     @Test
     void findAllByNameOrDescriptionContainingIgnoreCaseAndAvailableEqualsTest() {
         List<Item> test = repository.findAllByNameOrDescriptionContainingIgnoreCaseAndAvailableEquals(
-                "name_2", null, true, PageRequest.ofSize(1));
+                "name_2", null, true, MyPageRequest.ofSize(1));
         assertThat(test.size() == 1);
     }
 }

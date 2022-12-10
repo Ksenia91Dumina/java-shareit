@@ -2,10 +2,10 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.MyPageRequest;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingMapper;
 import ru.practicum.shareit.booking.model.BookingStatus;
@@ -48,10 +48,9 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public ItemDto createItem(ItemDto itemDto, long userId) {
         userService.getUserById(userId);
-        requestService.getRequestById(itemDto.getRequestId(), userId);
-        requestService.getRequestById(itemDto.getRequestId(), userId);
-            Item item = ItemMapper.toItem(itemDto, userId);
-            return ItemMapper.toItemDto(itemRepository.save(item));
+        //requestService.getRequestById(itemDto.getRequestId(), userId);
+        Item item = ItemMapper.toItem(itemDto, userId);
+        return ItemMapper.toItemDto(itemRepository.save(item));
     }
 
     @Override
@@ -80,7 +79,6 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-
     @Override
     public Item getItemById(long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() ->
@@ -89,7 +87,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> searchByText(String text, PageRequest pageRequest) {
+    public List<ItemDto> searchByText(String text, MyPageRequest pageRequest) {
         List<Item> items = itemRepository.findAllByNameOrDescriptionContainingIgnoreCaseAndAvailableEquals(
                 text, text, true, pageRequest);
         return items.stream()
@@ -122,7 +120,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemInfoDto> getItemsInfoByUserId(long userId, PageRequest pageRequest) {
+    public List<ItemInfoDto> getItemsInfoByUserId(long userId, MyPageRequest pageRequest) {
         userService.getUserById(userId);
         List<Item> items = itemRepository.findAllByOwnerId(userId, pageRequest);
         return items.stream()

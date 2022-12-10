@@ -2,10 +2,10 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.Create;
+import ru.practicum.shareit.MyPageRequest;
 import ru.practicum.shareit.Update;
 import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -51,7 +51,7 @@ public class ItemController {
                     @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на получение списка предметов пользователя с id = " + userId);
         int page = from / size;
-        final PageRequest pageRequest = PageRequest.of(page, size);
+        final MyPageRequest pageRequest = MyPageRequest.of(page, size);
         return itemService.getItemsInfoByUserId(userId, pageRequest);
     }
 
@@ -64,7 +64,7 @@ public class ItemController {
             return List.of();
         }
         int page = from / size;
-        final PageRequest pageRequest = PageRequest.of(page, size);
+        final MyPageRequest pageRequest = MyPageRequest.of(page, size);
         return itemService.searchByText(text, pageRequest);
     }
 

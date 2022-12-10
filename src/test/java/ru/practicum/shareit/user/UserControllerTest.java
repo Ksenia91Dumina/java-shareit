@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.MyPageRequest;
 import ru.practicum.shareit.exception.DuplicateEmailException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -113,7 +113,7 @@ class UserControllerTest {
 
     @Test
     void getAllUsersTest() throws Exception {
-        when(userService.getAllUsers(PageRequest.ofSize(10)))
+        when(userService.getAllUsers(MyPageRequest.ofSize(10)))
                 .thenReturn(List.of(userDto1, userDto2));
 
         mvc.perform(get("/users")
@@ -130,7 +130,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$[1].email", is(userDto2.getEmail())));
 
         verify(userService, times(1))
-                .getAllUsers(PageRequest.ofSize(10));
+                .getAllUsers(MyPageRequest.ofSize(10));
     }
 
     @Test

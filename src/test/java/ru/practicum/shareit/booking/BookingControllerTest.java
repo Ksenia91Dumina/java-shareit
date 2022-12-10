@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.MyPageRequest;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOutput;
 import ru.practicum.shareit.booking.model.BookingState;
@@ -146,7 +146,7 @@ public class BookingControllerTest {
     @Test
     void getBookingItemsByOwnerIdTest() throws Exception {
         when(bookingService.getBookingItemsByOwnerId(any(BookingState.class),
-                anyLong(), any(PageRequest.class)))
+                anyLong(), any(MyPageRequest.class)))
                 .thenReturn(List.of(bookingOutput));
 
         mvc.perform(get("/bookings/owner")

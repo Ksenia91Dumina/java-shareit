@@ -27,6 +27,8 @@ public class ItemRequestDto {
     @AllArgsConstructor
     public static class Requester {
         private long id;
+        @NotBlank
+        @Size(max = 255)
         private String name;
 
         public Requester(User requester) {

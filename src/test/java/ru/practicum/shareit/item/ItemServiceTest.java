@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.data.domain.PageRequest;
+import ru.practicum.shareit.MyPageRequest;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.comment.dto.CommentDto;
@@ -183,10 +183,10 @@ public class ItemServiceTest {
 
     @Test
     public void getItemsInfoByUserIdTest() {
-        when(repository.findAllByOwnerId(anyLong(), any(PageRequest.class)))
+        when(repository.findAllByOwnerId(anyLong(), any(MyPageRequest.class)))
                 .thenReturn(List.of(item));
 
-        List<ItemInfoDto> result = itemService.getItemsInfoByUserId(1L, PageRequest.ofSize(10));
+        List<ItemInfoDto> result = itemService.getItemsInfoByUserId(1L, MyPageRequest.ofSize(10));
 
         Assertions.assertEquals(1, result.get(0).getId());
         Assertions.assertEquals("Name_1", result.get(0).getName());
@@ -199,10 +199,10 @@ public class ItemServiceTest {
     @Test
     public void searchByTextTest() {
         when(repository.findAllByNameOrDescriptionContainingIgnoreCaseAndAvailableEquals(anyString(), anyString(),
-                anyBoolean(), any(PageRequest.class)))
+                anyBoolean(), any(MyPageRequest.class)))
                 .thenReturn(List.of(item));
 
-        List<ItemDto> result = itemService.searchByText("Name_1", PageRequest.ofSize(10));
+        List<ItemDto> result = itemService.searchByText("Name_1", MyPageRequest.ofSize(10));
 
         Assertions.assertEquals(1, result.get(0).getId());
         Assertions.assertEquals("Name_1", result.get(0).getName());
