@@ -1,7 +1,6 @@
 package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -18,15 +17,17 @@ import ru.practicum.shareit.user.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ItemRequestServiceImpl implements ItemRequestService {
 
-    @Autowired
-    public ItemRequestRepository repository;
+    private final ItemRequestRepository repository;
 
     private final UserService userService;
     private final ItemRepository itemRepository;
@@ -47,22 +48,37 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         List<ItemByRequestDto> items = itemRepository.findAllByRequestId(requestId)
                 .stream()
                 .map(ItemMapper::toItemByRequestDto)
-                .collect(Collectors.toList());
+                .collect(toList());
         return ItemRequestMapper.toItemRequestOutput(itemRequest, items);
     }
 
-    @Override
+    /*@Override
     public List<ItemRequestOutput> getRequestsByUserId(long userId) {
         userService.getUserById(userId);
         List<ItemRequest> requests = repository.findAllByRequester_IdOrderByCreatedDesc(userId);
         List<ItemRequestOutput> result = new ArrayList<>();
-
         requests.forEach(itemRequest -> {
             List<ItemByRequestDto> items = itemRepository.findAllByRequestId(itemRequest.getId())
                     .stream()
                     .map(ItemMapper::toItemByRequestDto)
-                    .collect(Collectors.toList());
+                    .collect(toList());
             result.add(ItemRequestMapper.toItemRequestOutput(itemRequest, items));
+        });
+        return result;
+    }*/
+
+    @Override
+    public List<ItemRequestOutput> getRequestsByUserId(long userId) {
+        userService.getUserById(userId);
+        List<ItemRequestOutput> result = new ArrayList<>();
+        List<ItemRequest> requests = repository.findAllByRequester_IdOrderByCreatedDesc(userId);
+        Map<Long, List<ItemByRequestDto>> items = itemRepository.findAllWhereRequest_IdIn(requests)
+                .stream()
+                .map(ItemMapper::toItemByRequestDto)
+                .collect(Collectors.groupingBy(ItemByRequestDto::getRequestId, toList()));
+        requests.forEach(itemRequest -> {
+            result.add(ItemRequestMapper.toItemRequestOutput(itemRequest,
+                    items.getOrDefault(itemRequest.getId(), null)));
         });
         return result;
     }
@@ -72,18 +88,18 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         userService.getUserById(userId);
         List<ItemRequest> requests = repository.findAllByRequester_IdNotOrderByCreatedDesc(userId);
         List<ItemRequestOutput> result = new ArrayList<>();
+        Map<Long, List<ItemByRequestDto>> items = itemRepository.findAllWhereRequest_IdIn(requests)
+                .stream()
+                .map(ItemMapper::toItemByRequestDto)
+                .collect(Collectors.groupingBy(ItemByRequestDto::getRequestId, toList()));
         requests.forEach(itemRequest -> {
-            List<ItemByRequestDto> items = itemRepository.findAllByRequestId(itemRequest.getId())
-                    .stream()
-                    .map(ItemMapper::toItemByRequestDto)
-                    .collect(Collectors.toList());
-            result.add(ItemRequestMapper.toItemRequestOutput(itemRequest, items));
+            result.add(ItemRequestMapper.toItemRequestOutput(itemRequest,
+                    items.getOrDefault(itemRequest.getId(), null)));
         });
-
         return result.subList(from, requests.size())
                 .stream()
                 .limit(size)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
 }

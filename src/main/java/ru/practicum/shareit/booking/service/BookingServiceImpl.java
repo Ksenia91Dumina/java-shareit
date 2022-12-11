@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,14 +24,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
 public class BookingServiceImpl implements BookingService {
-    @Autowired
-    public BookingRepository bookingRepository;
 
+    private final BookingRepository bookingRepository;
     private final ItemService itemService;
     private final UserService userService;
 

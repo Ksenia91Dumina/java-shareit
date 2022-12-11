@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,7 +31,6 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -74,12 +72,12 @@ public class BookingServiceTest {
                 .build();
     }
 
-    @BeforeEach
+    /* @BeforeEach
     void beforeEach() {
         repository = mock(BookingRepository.class);
         bookingService = new BookingServiceImpl(itemService, userService);
         bookingService.bookingRepository = repository;
-    }
+    }*/
 
     @Test
     public void addBookingTest() {

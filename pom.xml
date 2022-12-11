@@ -60,11 +60,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-    </dependencies>
+	</dependencies>
 
 	<build>
 		<resources>
@@ -172,7 +168,7 @@
 											<limit>
 												<counter>LINE</counter>
 												<value>COVEREDRATIO</value>
-												<minimum>0.7</minimum>
+												<minimum>0.9</minimum>
 											</limit>
 											<limit>
 												<counter>BRANCH</counter>
@@ -200,7 +196,7 @@
 							</configuration>
 						</execution>
 						<execution>
-							<id>jacoco-site</id>
+							<id>jacoco-report</id>
 							<phase>test</phase>
 							<goals>
 								<goal>report</goal>

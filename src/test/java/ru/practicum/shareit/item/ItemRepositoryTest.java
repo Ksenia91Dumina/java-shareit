@@ -82,4 +82,12 @@ public class ItemRepositoryTest {
                 "name_2", null, true, MyPageRequest.ofSize(1));
         assertThat(test.size() == 1);
     }
+
+    @Test
+    void findAllWhereRequest_IdInTest() {
+        List<ItemRequest> requests = List.of(request1, request2);
+        List<Item> test = repository.findAllWhereRequest_IdIn(requests);
+        assertThat(test.size() == 3);
+    }
+
 }

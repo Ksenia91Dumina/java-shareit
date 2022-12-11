@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,7 +31,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,13 +61,6 @@ public class ItemServiceTest {
                 .description("description for item_2")
                 .available(true)
                 .build();
-    }
-
-    @BeforeEach
-    void beforeEach() {
-        repository = mock(ItemRepository.class);
-        itemService = new ItemServiceImpl(bookingRepository, commentRepository, requestService, userService);
-        itemService.itemRepository = repository;
     }
 
     @Test

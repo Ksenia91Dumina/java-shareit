@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,7 +24,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,13 +45,6 @@ public class UserServiceTest {
                 .name("Name_2")
                 .email("zxcv@mail.ru")
                 .build();
-    }
-
-    @BeforeEach
-    void beforeEach() {
-        repository = mock(UserRepository.class);
-        userService = new UserServiceImpl();
-        userService.userRepository = repository;
     }
 
     @Test
@@ -168,6 +161,26 @@ public class UserServiceTest {
         Assertions.assertEquals(1, result.getId());
         Assertions.assertEquals("new_name", result.getName());
         Assertions.assertEquals("qwer@mail.ru", result.getEmail());
+    }
+
+    @Test
+    public void deleteUserByIdTest() {
+        when(repository.save(Mockito.any(User.class)))
+                .thenReturn(user);
+        userService.createUser(UserMapper.toUserDto(user));
+        final PageImpl<User> userPage = new PageImpl<>(Collections.singletonList(user));
+        when(repository.findAll(MyPageRequest.ofSize(10)))
+                .thenReturn(userPage);
+        List<UserDto> result = userService.getAllUsers(MyPageRequest.ofSize(10));
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.size());
+
+        when(repository.findById(Mockito.anyLong()))
+                .thenReturn(Optional.of(user));
+        userService.deleteUserById(user.getId());
+        verify(repository).deleteById(user.getId());
+        List<UserDto> result2 = userService.getAllUsers(MyPageRequest.ofSize(10));
+        assertThat(result2.isEmpty());
     }
 
 }

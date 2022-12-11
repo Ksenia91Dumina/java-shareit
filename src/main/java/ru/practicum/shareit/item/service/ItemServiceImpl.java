@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,14 +40,12 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRequestService requestService;
     private final UserService userService;
 
-    @Autowired
-    public ItemRepository itemRepository;
+    private final ItemRepository itemRepository;
 
     @Override
     @Transactional
     public ItemDto createItem(ItemDto itemDto, long userId) {
         userService.getUserById(userId);
-        //requestService.getRequestById(itemDto.getRequestId(), userId);
         Item item = ItemMapper.toItem(itemDto, userId);
         return ItemMapper.toItemDto(itemRepository.save(item));
     }

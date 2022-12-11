@@ -1,7 +1,6 @@
 package ru.practicum.shareit.request;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,12 +49,6 @@ public class RequestServiceTest {
                 .build();
     }
 
-    @BeforeEach
-    void beforeEach() {
-        repository = mock(ItemRequestRepository.class);
-        requestService = new ItemRequestServiceImpl(userService, itemRepository);
-        requestService.repository = repository;
-    }
 
     @Test
     public void getRequestsByUserIdTest() {
