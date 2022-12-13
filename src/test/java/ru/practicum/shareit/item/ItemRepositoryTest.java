@@ -84,9 +84,9 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    void findAllWhereRequest_IdInTest() {
-        List<ItemRequest> requests = List.of(request1, request2);
-        List<Item> test = repository.findAllWhereRequest_IdIn(requests);
+    void findAllWhereRequestIdInTest() {
+        List<Long> requests = List.of(request1.getId(), request2.getId());
+        List<Item> test = repository.findAllWhereRequestIdIn(requests);
         assertThat(test.size() == 3);
     }
 

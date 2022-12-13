@@ -52,27 +52,17 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return ItemRequestMapper.toItemRequestOutput(itemRequest, items);
     }
 
-    /*@Override
-    public List<ItemRequestOutput> getRequestsByUserId(long userId) {
-        userService.getUserById(userId);
-        List<ItemRequest> requests = repository.findAllByRequester_IdOrderByCreatedDesc(userId);
-        List<ItemRequestOutput> result = new ArrayList<>();
-        requests.forEach(itemRequest -> {
-            List<ItemByRequestDto> items = itemRepository.findAllByRequestId(itemRequest.getId())
-                    .stream()
-                    .map(ItemMapper::toItemByRequestDto)
-                    .collect(toList());
-            result.add(ItemRequestMapper.toItemRequestOutput(itemRequest, items));
-        });
-        return result;
-    }*/
 
     @Override
     public List<ItemRequestOutput> getRequestsByUserId(long userId) {
         userService.getUserById(userId);
         List<ItemRequestOutput> result = new ArrayList<>();
         List<ItemRequest> requests = repository.findAllByRequester_IdOrderByCreatedDesc(userId);
-        Map<Long, List<ItemByRequestDto>> items = itemRepository.findAllWhereRequest_IdIn(requests)
+        List<Long> requestsId = new ArrayList<>();
+        requests.forEach(r -> {
+            requestsId.add(r.getId());
+        });
+        Map<Long, List<ItemByRequestDto>> items = itemRepository.findAllWhereRequestIdIn(requestsId)
                 .stream()
                 .map(ItemMapper::toItemByRequestDto)
                 .collect(Collectors.groupingBy(ItemByRequestDto::getRequestId, toList()));
@@ -87,8 +77,12 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public List<ItemRequestOutput> getAllRequests(long userId, int from, Integer size) {
         userService.getUserById(userId);
         List<ItemRequest> requests = repository.findAllByRequester_IdNotOrderByCreatedDesc(userId);
+        List<Long> requestsId = new ArrayList<>();
+        requests.forEach(r -> {
+            requestsId.add(r.getId());
+        });
         List<ItemRequestOutput> result = new ArrayList<>();
-        Map<Long, List<ItemByRequestDto>> items = itemRepository.findAllWhereRequest_IdIn(requests)
+        Map<Long, List<ItemByRequestDto>> items = itemRepository.findAllWhereRequestIdIn(requestsId)
                 .stream()
                 .map(ItemMapper::toItemByRequestDto)
                 .collect(Collectors.groupingBy(ItemByRequestDto::getRequestId, toList()));
