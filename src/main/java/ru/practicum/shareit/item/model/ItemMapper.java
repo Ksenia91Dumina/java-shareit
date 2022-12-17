@@ -49,6 +49,4 @@ public class ItemMapper {
                 .requestId(item.getRequestId())
                 .build();
     }
-
-
 }
