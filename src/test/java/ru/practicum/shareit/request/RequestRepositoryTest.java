@@ -35,13 +35,12 @@ public class RequestRepositoryTest {
 
     @BeforeEach
     void init() {
-        user = userRepository.save(new User(1L, "Name", "mail@mail.ru"));
+        user = userRepository.save(new User(1L, "Name", "qwer@mail.ru"));
         entityManager.persist(user);
         request1 = repository.save(new ItemRequest(1L, "Request text", user, date));
         entityManager.persist(request1);
         request2 = repository.save(new ItemRequest(2L, "Request text2", user, date));
         entityManager.persist(request2);
-        entityManager.flush();
         entityManager.getEntityManager().getTransaction().commit();
     }
 
