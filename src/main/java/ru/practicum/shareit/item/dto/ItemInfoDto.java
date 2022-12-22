@@ -19,4 +19,17 @@ public class ItemInfoDto {
     private BookingDto lastBooking;
     private BookingDto nextBooking;
     private Set<CommentDto> comments;
+
+    public ItemInfoDto(long id, String name, String description, Boolean available, long ownerId, Long requestId,
+                       BookingDto lastBooking, BookingDto nextBooking, Set<CommentDto> comments) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.available = available;
+        this.ownerId = ownerId;
+        this.requestId = requestId;
+        this.lastBooking = lastBooking;
+        this.nextBooking = nextBooking;
+        this.comments = comments;
+    }
 }

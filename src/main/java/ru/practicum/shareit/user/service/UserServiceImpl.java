@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.additions.MyPageRequest;
 import ru.practicum.shareit.exception.DuplicateEmailException;
 import ru.practicum.shareit.exception.NotAllowedException;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -55,8 +56,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        return userRepository.findAll()
+    public List<UserDto> getAllUsers(MyPageRequest pageRequest) {
+        return userRepository.findAll(pageRequest)
                 .stream()
                 .map(UserMapper::toUserDto)
                 .collect(Collectors.toList());

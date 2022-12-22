@@ -2,12 +2,12 @@ package ru.practicum.shareit.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.booking.BookingController;
 import ru.practicum.shareit.item.ItemController;
+import ru.practicum.shareit.request.ItemRequestController;
 import ru.practicum.shareit.user.UserController;
 
 import javax.validation.ConstraintViolationException;
@@ -15,7 +15,8 @@ import javax.validation.ConstraintViolationException;
 @RestControllerAdvice(assignableTypes = {
         UserController.class,
         ItemController.class,
-        BookingController.class
+        BookingController.class,
+        ItemRequestController.class
 })
 @Slf4j
 public class ErrorHandler {
@@ -57,13 +58,6 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIllegalArgumentException(final IllegalArgumentException e) {
-        log.info("400 {}", e.getMessage(), e);
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         log.info("400 {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }

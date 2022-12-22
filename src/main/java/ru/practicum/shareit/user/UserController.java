@@ -4,17 +4,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.Create;
-import ru.practicum.shareit.Update;
+import ru.practicum.shareit.additions.Create;
+import ru.practicum.shareit.additions.MyPageRequest;
+import ru.practicum.shareit.additions.Update;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class UserController {
     private final UserService userService;
 
@@ -31,9 +35,12 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
+    public List<UserDto> getAllUsers(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                     @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на получение списка всех пользователей");
-        return userService.getAllUsers();
+        int page = from / size;
+        final MyPageRequest pageRequest = MyPageRequest.of(page, size);
+        return userService.getAllUsers(pageRequest);
     }
 
     @GetMapping("/{userId}")

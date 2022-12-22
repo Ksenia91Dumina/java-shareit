@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.additions.MyPageRequest;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingMapper;
 import ru.practicum.shareit.booking.model.BookingStatus;
@@ -20,6 +21,7 @@ import ru.practicum.shareit.item.dto.ItemInfoDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.ItemMapper;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.model.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -32,10 +34,13 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService {
 
-    private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+
+    private final ItemRequestService requestService;
     private final UserService userService;
+
+    private final ItemRepository itemRepository;
 
     @Override
     @Transactional
@@ -71,7 +76,6 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-
     @Override
     public Item getItemById(long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() ->
@@ -80,17 +84,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getAllItems() {
-        return itemRepository.findAll()
-                .stream()
-                .map(ItemMapper::toItemDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ItemDto> searchByText(String text) {
+    public List<ItemDto> searchByText(String text, MyPageRequest pageRequest) {
         List<Item> items = itemRepository.findAllByNameOrDescriptionContainingIgnoreCaseAndAvailableEquals(
-                text, text, true);
+                text, text, true, pageRequest);
         return items.stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
@@ -121,9 +117,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemInfoDto> getItemsInfoByUserId(long userId) {
+    public List<ItemInfoDto> getItemsInfoByUserId(long userId, MyPageRequest pageRequest) {
         userService.getUserById(userId);
-        List<Item> items = itemRepository.findAllByOwnerId(userId);
+        List<Item> items = itemRepository.findAllByOwnerId(userId, pageRequest);
         return items.stream()
                 .map(ItemMapper::toItemInfoDto)
                 .peek(i -> i.setLastBooking(BookingMapper.toBookingDto(

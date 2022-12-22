@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user.service;
 
+import ru.practicum.shareit.additions.MyPageRequest;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -10,7 +11,7 @@ public interface UserService {
 
     UserDto updateUser(UserDto userDto, long userId);
 
-    List<UserDto> getAllUsers();
+    List<UserDto> getAllUsers(MyPageRequest pageRequest);
 
     UserDto getUserById(long userId) throws NotFoundException;
 
