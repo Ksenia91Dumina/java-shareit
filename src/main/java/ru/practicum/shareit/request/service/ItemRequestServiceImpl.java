@@ -16,6 +16,7 @@ import ru.practicum.shareit.user.model.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -68,7 +69,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .collect(Collectors.groupingBy(ItemByRequestDto::getRequestId, toList()));
         requests.forEach(itemRequest -> {
             result.add(ItemRequestMapper.toItemRequestOutput(itemRequest,
-                    items.getOrDefault(itemRequest.getId(), null)));
+                    items.getOrDefault(itemRequest.getId(), Collections.emptyList())));
         });
         return result;
     }
@@ -88,7 +89,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .collect(Collectors.groupingBy(ItemByRequestDto::getRequestId, toList()));
         requests.forEach(itemRequest -> {
             result.add(ItemRequestMapper.toItemRequestOutput(itemRequest,
-                    items.getOrDefault(itemRequest.getId(), null)));
+                    items.getOrDefault(itemRequest.getId(), Collections.emptyList())));
         });
         return result.subList(from, requests.size())
                 .stream()
