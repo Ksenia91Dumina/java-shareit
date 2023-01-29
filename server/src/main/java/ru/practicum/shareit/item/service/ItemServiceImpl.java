@@ -15,7 +15,6 @@ import ru.practicum.shareit.comment.model.CommentMapper;
 import ru.practicum.shareit.comment.repository.CommentRepository;
 import ru.practicum.shareit.exception.NotAllowedException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidateException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemInfoDto;
 import ru.practicum.shareit.item.model.Item;
@@ -157,7 +156,7 @@ public class ItemServiceImpl implements ItemService {
         if (booking != null) {
             return CommentMapper.toCommentDto(commentRepository.save(comment));
         } else {
-            throw new ValidateException(String.format("Пользователь с id = %s не использовал предмет с id = %s",
+            throw new IllegalArgumentException(String.format("Пользователь с id = %s не использовал предмет с id = %s",
                     userId, itemId));
         }
     }
