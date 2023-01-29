@@ -56,7 +56,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = getItemById(itemId);
         userService.getUserById(userId);
         if (item.getOwnerId() != userId) {
-            throw new NotAllowedException("Пользователь с id = " + userId + " не может внести изменения");
+            throw new NotAllowedException(String.format("Пользователь с id = %s не может внести изменения", userId));
         } else {
             Item itemToUpdate = ItemMapper.toItem(itemDto, userId);
             itemToUpdate.setId(itemId);
@@ -79,7 +79,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Item getItemById(long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() ->
-                new NotFoundException("Item с id = " + itemId + " не найден"));
+                new NotFoundException(String.format("Item с id = %s не найден", itemId)));
         return item;
     }
 
@@ -157,7 +157,8 @@ public class ItemServiceImpl implements ItemService {
         if (booking != null) {
             return CommentMapper.toCommentDto(commentRepository.save(comment));
         } else {
-            throw new ValidateException("Пользователь с id = " + userId + " не использовал предмет с id = " + itemId);
+            throw new ValidateException(String.format("Пользователь с id = %s не использовал предмет с id = %s",
+                    userId, itemId));
         }
     }
 

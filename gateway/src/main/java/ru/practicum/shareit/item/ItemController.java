@@ -32,7 +32,8 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ResponseEntity<Object> updateItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                                             @Validated({Update.class}) @RequestBody ItemDto itemDto, @PathVariable long itemId) {
+                                             @Validated({Update.class}) @RequestBody ItemDto itemDto,
+                                             @PathVariable long itemId) {
         log.info("Получен запрос на изменение предмета");
         return itemClient.updateItem(itemDto, userId, itemId);
     }
@@ -40,7 +41,7 @@ public class ItemController {
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> getItemById(@PathVariable long itemId,
                                               @RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("Получен запрос на получение информации по id предмета = " + itemId);
+        log.info(String.format("Получен запрос на получение информации по id предмета = %s", itemId));
         return itemClient.getItemInfoById(itemId, userId);
     }
 
@@ -48,7 +49,7 @@ public class ItemController {
     public ResponseEntity<Object> getItemsInfoByUserId(@RequestHeader("X-Sharer-User-Id") long userId,
                                                        @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                        @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("Получен запрос на получение списка предметов пользователя с id = " + userId);
+        log.info(String.format("Получен запрос на получение списка предметов пользователя с id = %s", userId));
         int page = from / size;
         final MyPageRequest pageRequest = MyPageRequest.of(page, size);
         return itemClient.getItemsInfoByUserId(userId, pageRequest);
@@ -68,7 +69,7 @@ public class ItemController {
     public ResponseEntity<Object> addComment(@PathVariable long itemId,
                                              @RequestHeader("X-Sharer-User-Id") long userId,
                                              @Validated({Create.class}) @RequestBody CommentDto commentDto) {
-        log.info("Получен запрос на добавление комментария к предмету с id = " + itemId);
+        log.info(String.format("Получен запрос на добавление комментария к предмету с id = %s", itemId));
         return itemClient.addComment(commentDto, userId, itemId);
     }
 }

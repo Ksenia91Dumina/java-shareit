@@ -80,7 +80,7 @@ public class BookingController {
 
     public void validateBookingState(BookingState state, String stateText) {
         if (state == null) {
-            throw new ValidateException("Unknown state: " + stateText);
+            throw new ValidateException(String.format("Unknown state: %s", stateText));
         }
     }
 

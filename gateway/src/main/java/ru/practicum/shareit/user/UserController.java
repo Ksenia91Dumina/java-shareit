@@ -46,7 +46,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getById(@PathVariable long userId) {
-        log.info("Получен запрос на получение информации по id пользователя = " + userId);
+        log.info(String.format("Получен запрос на получение информации по id пользователя = %s", userId));
         return userClient.getUserById(userId);
     }
 

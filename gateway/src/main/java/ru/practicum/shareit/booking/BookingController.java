@@ -24,32 +24,31 @@ public class BookingController {
     private final BookingClient bookingClient;
 
     @PostMapping
-    public ResponseEntity<Object> addBooking(@Validated({Create.class}) @RequestBody BookItemRequestDto bookingDto,
-                                             @RequestHeader("X-Sharer-User-Id") long userId) {
+    public ResponseEntity<Object> addBooking(@RequestHeader("X-Sharer-User-Id") long userId,
+                                             @Validated({Create.class}) @RequestBody BookItemRequestDto bookingDto) {
         log.info("Получен запрос на добавление бронирования");
         validateBookingDate(bookingDto);
         return bookingClient.addBooking(userId, bookingDto);
-
     }
 
     @PatchMapping("/{bookingId}")
-    public ResponseEntity<Object> updateBooking(@PathVariable long bookingId,
-                                                @RequestParam boolean approved,
-                                                @RequestHeader("X-Sharer-User-Id") long userId) {
+    public ResponseEntity<Object> updateBooking(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                @PathVariable long bookingId,
+                                                @RequestParam boolean approved) {
         log.info("Получен запрос на подтверждение бронирования");
         return bookingClient.updateBooking(bookingId, approved, userId);
     }
 
     @GetMapping("/{bookingId}")
-    public ResponseEntity<Object> getBooking(@PathVariable long bookingId,
-                                             @RequestHeader("X-Sharer-User-Id") long userId) {
+    public ResponseEntity<Object> getBooking(@RequestHeader("X-Sharer-User-Id") long userId,
+                                             @PathVariable long bookingId) {
         log.info("Получен запрос на поиск информации по id бронирования");
         return bookingClient.getBookingById(bookingId, userId);
     }
 
     @GetMapping
-    public ResponseEntity<Object> getBookingsByUserId(@RequestParam(name = "state", defaultValue = "ALL", required = false)
-                                                      String stateText, @RequestHeader("X-Sharer-User-Id") long userId,
+    public ResponseEntity<Object> getBookingsByUserId(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                      @RequestParam(name = "state", defaultValue = "ALL") String stateText,
                                                       @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                       @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на поиск бронирования по id пользователя");
@@ -62,8 +61,9 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<Object> getBookingItemsByOwnerId(@RequestParam(defaultValue = "ALL", required = false,
-            name = "state") String stateText, @RequestHeader("X-Sharer-User-Id") long userId,
+    public ResponseEntity<Object> getBookingItemsByOwnerId(@RequestParam(defaultValue = "ALL", name = "state")
+                                                           String stateText,
+                                                           @RequestHeader("X-Sharer-User-Id") long userId,
                                                            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на поиск бронирования по id владельца");
@@ -83,7 +83,7 @@ public class BookingController {
 
     public void validateBookingState(BookingState state, String stateText) {
         if (state == null) {
-            throw new ValidateException("Unknown state: " + stateText);
+            throw new ValidateException(String.format("Unknown state: %s", stateText));
         }
     }
 

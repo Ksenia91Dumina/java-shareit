@@ -29,7 +29,7 @@ public class ItemRequestController {
     @GetMapping
     public List<ItemRequestOutput> getRequestsByUserId(
             @RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("Получен запрос на получение информации по id пользователя = " + userId);
+        log.info("Получен запрос на получение информации по id пользователя = {}", userId);
         return itemRequestService.getRequestsByUserId(userId);
     }
 
@@ -38,7 +38,7 @@ public class ItemRequestController {
             @RequestHeader("X-Sharer-User-Id") long userId,
             @RequestParam(name = "from", defaultValue = "0") Integer from,
             @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("Получен запрос на получение списка запросов пользователя с id = " + userId);
+        log.info("Получен запрос на получение списка запросов пользователя с id = {}", userId);
         return itemRequestService.getAllRequests(userId, from, size);
     }
 
@@ -46,7 +46,7 @@ public class ItemRequestController {
     public ItemRequestOutput getRequestById(
             @RequestHeader("X-Sharer-User-Id") long userId,
             @PathVariable long requestId) {
-        log.info("Получен запрос на получение информации по id  = " + requestId);
+        log.info("Получен запрос на получение информации по id  = {}", requestId);
         return itemRequestService.getRequestById(requestId, userId);
     }
 

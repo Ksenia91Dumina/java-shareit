@@ -2,7 +2,6 @@ package ru.practicum.shareit.request.dto;
 
 import lombok.*;
 import ru.practicum.shareit.additions.Create;
-import ru.practicum.shareit.user.model.User;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -20,6 +19,19 @@ public class ItemRequestDto {
     private String description;
     private Requester requester;
     private LocalDateTime created;
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+
+    public class User {
+
+        private long id;
+
+        private String name;
+
+        private String email;
+    }
 
     @Getter
     @Setter
@@ -49,5 +61,7 @@ public class ItemRequestDto {
             return Objects.hash(id, name);
         }
     }
-
 }
+
+
+

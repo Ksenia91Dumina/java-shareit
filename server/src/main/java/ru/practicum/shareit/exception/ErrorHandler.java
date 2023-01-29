@@ -10,8 +10,6 @@ import ru.practicum.shareit.item.ItemController;
 import ru.practicum.shareit.request.ItemRequestController;
 import ru.practicum.shareit.user.UserController;
 
-import javax.validation.ConstraintViolationException;
-
 @RestControllerAdvice(assignableTypes = {
         UserController.class,
         ItemController.class,
@@ -41,12 +39,12 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler
+   /* @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleAnotherException(final ConstraintViolationException e) {
         log.info("400 {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
-    }
+    }*/
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)

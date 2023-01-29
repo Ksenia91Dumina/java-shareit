@@ -29,7 +29,8 @@ public class UserServiceImpl implements UserService {
             User user = UserMapper.toUser(userDto);
             return UserMapper.toUserDto(userRepository.save(user));
         } catch (Exception e) {
-            throw new DuplicateEmailException("Пользователь с почтой " + userDto.getEmail() + " уже существует");
+            throw new DuplicateEmailException(String.format("Пользователь с почтой %s уже существует",
+                    userDto.getEmail()));
         }
     }
 
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(UserDto userDto, long userId) {
         checkUserEmailForDuplicate(userDto.getEmail());
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new NotFoundException("Пользователь с id = " + userId + " не найден"));
+                new NotFoundException(String.format("Пользователь с id = %s не найден", userId)));
         if (user.getId() == userId) {
             User userToUpdate = UserMapper.toUser(userDto);
             userToUpdate.setId(userId);
@@ -50,8 +51,8 @@ public class UserServiceImpl implements UserService {
             }
             return UserMapper.toUserDto(user);
         } else {
-            throw new NotAllowedException("Пользователь с id = " + user.getId() +
-                    " не может изменить пользователя с id = " + userId);
+            throw new NotAllowedException(String.format("Пользователь с id = %s не может изменить пользователя с id = %s",
+                    user.getId(), userId));
         }
     }
 
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserById(long userId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new NotFoundException("Пользователь с id = " + userId + " не найден"));
+                new NotFoundException(String.format("Пользователь с id = %s не найден", userId)));
         return UserMapper.toUserDto(user);
     }
 
@@ -80,7 +81,7 @@ public class UserServiceImpl implements UserService {
 
     private void checkUserEmailForDuplicate(String email) {
         if (userRepository.existsByEmail(email) && !email.isBlank()) {
-            throw new DuplicateEmailException("Пользователь с почтой " + email + " уже сущетвует");
+            throw new DuplicateEmailException(String.format("Пользователь с почтой {} уже сущетвует", email));
         }
     }
 }

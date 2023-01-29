@@ -36,7 +36,7 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     public ItemInfoDto getItemById(@PathVariable long itemId, @RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("Получен запрос на получение информации по id предмета = " + itemId);
+        log.info("Получен запрос на получение информации по id предмета = {}", itemId);
         return itemService.getItemInfoById(itemId, userId);
     }
 
@@ -44,7 +44,7 @@ public class ItemController {
     public List<ItemInfoDto> getItemsInfoByUserId(@RequestHeader("X-Sharer-User-Id") long userId,
                                                   @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                   @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("Получен запрос на получение списка предметов пользователя с id = " + userId);
+        log.info("Получен запрос на получение списка предметов пользователя с id = {}", userId);
         int page = from / size;
         final MyPageRequest pageRequest = MyPageRequest.of(page, size);
         return itemService.getItemsInfoByUserId(userId, pageRequest);
@@ -67,7 +67,7 @@ public class ItemController {
     public CommentDto addComment(@PathVariable long itemId,
                                  @RequestHeader("X-Sharer-User-Id") long userId,
                                  @RequestBody CommentDto commentDto) {
-        log.info("Получен запрос на добавление комментария к предмету с id = " + itemId);
+        log.info("Получен запрос на добавление комментария к предмету с id = {}", itemId);
         return itemService.addComment(commentDto, userId, itemId);
     }
 }

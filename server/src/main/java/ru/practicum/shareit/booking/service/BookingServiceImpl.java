@@ -46,11 +46,11 @@ public class BookingServiceImpl implements BookingService {
             if (itemToCheck.getAvailable()) {
                 return BookingMapper.toBookingOutput(bookingRepository.save(booking));
             } else {
-                throw new ValidateException("Предмет с id = " + item.getId() + " недоступен для бронирования");
+                throw new ValidateException(String.format("Предмет с id = %s недоступен для бронирования", item.getId()));
             }
         } else {
-            throw new NotFoundException("Пользователь с id = " + userId +
-                    " не может забронировать предмет с id = " + item.getId());
+            throw new NotFoundException(String.format("Пользователь с id = %s не может забронировать предмет с id = %s",
+                    userId, item.getId()));
         }
     }
 
@@ -59,7 +59,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingOutput updateBooking(long bookingId, boolean approved, long userId) {
         userService.getUserById(userId);
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() ->
-                new NotFoundException("Бронирование с id = " + bookingId + " не найдено"));
+                new NotFoundException(String.format("Бронирование с id = %s не найдено", bookingId)));
         Item item = itemService.getItemById(booking.getItem().getId());
         if (item.getOwnerId() == userId) {
             if (approved) {
@@ -73,8 +73,8 @@ public class BookingServiceImpl implements BookingService {
             }
             return BookingMapper.toBookingOutput(bookingRepository.save(booking));
         } else {
-            throw new NotFoundException("Пользователь с id = " + userId +
-                    " не может внести изменение в бронирование");
+            throw new NotFoundException(String.format("Пользователь с id = %s не может внести изменение в бронирование",
+                    userId));
         }
     }
 
@@ -87,11 +87,11 @@ public class BookingServiceImpl implements BookingService {
             if (booking.get().getBooker().getId() == userId || item.getOwnerId() == userId) {
                 return BookingMapper.toBookingOutput(booking.get());
             } else {
-                throw new NotFoundException("Пользователь с id = " + userId +
-                        " не может внести изменение в бронирование");
+                throw new NotFoundException(String.format("Пользователь с id = %s не может внести изменение в бронирование",
+                        userId));
             }
         } else {
-            throw new NotFoundException("Бронирование с id = " + bookingId + " не найдено");
+            throw new NotFoundException(String.format("Бронирование с id = %s не найдено", bookingId));
         }
     }
 
