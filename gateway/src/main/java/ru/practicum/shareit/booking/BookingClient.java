@@ -47,19 +47,17 @@ public class BookingClient extends BaseClient {
     public ResponseEntity<Object> getBookingsByUserId(BookingState state, long userId, MyPageRequest pageRequest) {
         Map<String, Object> parameters = Map.of(
                 "state", state.name(),
-                "from", pageRequest.getOffset(),
-                "size", pageRequest.getPageSize()
+                "pageRequest", pageRequest
         );
-        return get("?state={state}&from={from}&size={size}", userId, parameters);
+        return get("?state={state}&pageRequest={pageRequest}", userId, parameters);
     }
 
 
     public ResponseEntity<Object> getBookingItemsByOwnerId(BookingState state, long userId, MyPageRequest pageRequest) {
         Map<String, Object> parameters = Map.of(
                 "state", state.name(),
-                "from", pageRequest.getOffset(),
-                "size", pageRequest.getPageSize()
+                "pageRequest", pageRequest
         );
-        return get("/owner?state={state}&from={from}&size={size}", userId, parameters);
+        return get("/owner?state={state}&pageRequest={pageRequest}", userId, parameters);
     }
 }
