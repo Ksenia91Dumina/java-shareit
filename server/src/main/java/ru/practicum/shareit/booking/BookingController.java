@@ -10,7 +10,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOutput;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.exception.ValidateException;
 
 import java.util.List;
 
@@ -26,7 +25,6 @@ public class BookingController {
     public BookingOutput addBooking(@RequestBody BookingDto bookingDto,
                                     @RequestHeader("X-Sharer-User-Id") long userId) {
         log.info("Получен запрос на добавление бронирования");
-        validateBookingDate(bookingDto);
         return service.addBooking(bookingDto, userId);
 
     }
@@ -53,8 +51,6 @@ public class BookingController {
                                                    @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на поиск бронирования по id пользователя");
         BookingState state = BookingState.fromString(stateText);
-        validateBookingState(state, stateText);
-        checkingParamsForPagination(from, size);
         final MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.unsorted());
         return service.getBookingsByUserId(state, userId, pageRequest);
     }
@@ -66,28 +62,8 @@ public class BookingController {
                                                         @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на поиск бронирования по id владельца");
         BookingState state = BookingState.fromString(stateText);
-        checkingParamsForPagination(from, size);
-        validateBookingState(state, stateText);
         final MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.unsorted());
         return service.getBookingItemsByOwnerId(state, userId, pageRequest);
-    }
-
-    private void validateBookingDate(BookingDto bookingDto) {
-        if (!bookingDto.getStart().isBefore(bookingDto.getEnd())) {
-            throw new ValidateException("Дата начала бронирования должна быть раньше даты окончания");
-        }
-    }
-
-    public void validateBookingState(BookingState state, String stateText) {
-        if (state == null) {
-            throw new ValidateException(String.format("Unknown state: %s", stateText));
-        }
-    }
-
-    private void checkingParamsForPagination(int from, int size) {
-        if (from > size) {
-            throw new IllegalArgumentException("Параметр from должен быть меньше размера страницы");
-        }
     }
 
 }

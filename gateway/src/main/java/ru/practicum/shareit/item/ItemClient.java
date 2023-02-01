@@ -47,19 +47,17 @@ public class ItemClient extends BaseClient {
 
     public ResponseEntity<Object> getItemsInfoByUserId(long userId, MyPageRequest pageRequest) {
         Map<String, Object> parameters = Map.of(
-                "from", pageRequest.getOffset(),
-                "size", pageRequest.getPageSize()
+                "pageRequest",pageRequest
         );
-        return get("?from={from}&size={size}", userId, parameters);
+        return get("?pageRequest={pageRequest}", userId, parameters);
     }
 
     public ResponseEntity<Object> searchByText(String text, MyPageRequest pageRequest) {
         Map<String, Object> parameters = Map.of(
                 "text", text,
-                "from", pageRequest.getOffset(),
-                "size", pageRequest.getPageSize()
+                "pageRequest", pageRequest
         );
-        return get("/search?text={text}&from={from}&size={size}", null, parameters);
+        return get("/search?text={text}&pageRequest={pageRequest}", null, parameters);
     }
 
     public ResponseEntity<Object> addComment(CommentDto commentDto, long userId, long itemId) {

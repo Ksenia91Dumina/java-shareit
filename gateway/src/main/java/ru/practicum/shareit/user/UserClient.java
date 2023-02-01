@@ -11,6 +11,8 @@ import ru.practicum.shareit.additions.MyPageRequest;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.user.dto.UserDto;
 
+import java.util.Map;
+
 @Service
 public class UserClient extends BaseClient {
 
@@ -35,7 +37,10 @@ public class UserClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getAllUsers(MyPageRequest pageRequest) {
-        return get("");
+        Map<String, Object> parameters = Map.of(
+                "pageRequest", pageRequest
+        );
+        return get("", null, parameters);
     }
 
     public ResponseEntity<Object> getUserById(long userId) {

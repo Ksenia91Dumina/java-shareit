@@ -162,10 +162,4 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$[0].item", is(bookingOutput.getItem()), BookingOutput.Item.class));
     }
 
-    @Test
-    void validateStateTest() {
-        BookingController controller = new BookingController(bookingService);
-        Assertions.assertThrows(ValidateException.class, () ->
-                controller.validateBookingState(null, "NewState"));
-    }
 }
