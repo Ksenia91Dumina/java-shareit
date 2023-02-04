@@ -33,14 +33,14 @@ public class BookingController {
     public BookingOutput updateBooking(@PathVariable long bookingId,
                                        @RequestParam boolean approved,
                                        @RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("Получен запрос на подтверждение бронирования");
+        log.info("Получен запрос на подтверждение бронирования с id = ", bookingId);
         return service.updateBooking(bookingId, approved, userId);
     }
 
     @GetMapping("/{bookingId}")
     public BookingOutput getBooking(@PathVariable long bookingId,
                                     @RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("Получен запрос на поиск информации по id бронирования");
+        log.info("Получен запрос на поиск информации по id бронирования = {}", bookingId);
         return service.getBookingById(bookingId, userId);
     }
 
@@ -49,7 +49,7 @@ public class BookingController {
                                                    String stateText, @RequestHeader("X-Sharer-User-Id") long userId,
                                                    @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                    @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("Получен запрос на поиск бронирования по id пользователя");
+        log.info("Получен запрос на поиск бронирования по id пользователя = {}", userId);
         BookingState state = BookingState.fromString(stateText);
         final MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.unsorted());
         return service.getBookingsByUserId(state, userId, pageRequest);
@@ -60,7 +60,7 @@ public class BookingController {
             name = "state") String stateText, @RequestHeader("X-Sharer-User-Id") long userId,
                                                         @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                         @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("Получен запрос на поиск бронирования по id владельца");
+        log.info("Получен запрос на поиск бронирования по id владельца = {}", userId);
         BookingState state = BookingState.fromString(stateText);
         final MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.unsorted());
         return service.getBookingItemsByOwnerId(state, userId, pageRequest);

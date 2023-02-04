@@ -52,9 +52,9 @@ public class BookingControllerTest {
             .id(2L)
             .start(LocalDateTime.of(2023, 1, 1, 1, 1))
             .end(LocalDateTime.of(2024, 1, 1, 1, 1))
-            .item(new BookingOutput.Item(new Item(1L, "Name1", "Description",
-                    true, 1L, null)))
-            .booker(new BookingOutput.Booker(new User(1L, "Name1", "qwer@mail.ru")))
+            .item(new Item(1L, "Name1", "Description",
+                    true, 1L, null))
+            .booker(new User(1L, "Name1", "qwer@mail.ru"))
             .status(BookingStatus.WAITING)
             .build();
 
@@ -72,8 +72,8 @@ public class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(bookingOutput.getId()), Long.class))
                 .andExpect(jsonPath("$.status", is(String.valueOf(bookingOutput.getStatus()))))
-                .andExpect(jsonPath("$.booker", is(bookingOutput.getBooker()), BookingOutput.Booker.class))
-                .andExpect(jsonPath("$.item", is(bookingOutput.getItem()), BookingOutput.Item.class));
+                .andExpect(jsonPath("$.booker", is(bookingOutput.getBooker()), User.class))
+                .andExpect(jsonPath("$.item", is(bookingOutput.getItem()), Item.class));
     }
 
     @Test
@@ -121,8 +121,8 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$.id", is(bookingOutput.getId()), Long.class))
                 .andExpect(jsonPath("$.status", is(String.valueOf(bookingOutput.getStatus()))))
                 .andExpect(jsonPath("$.booker", is(bookingOutput.getBooker()),
-                        BookingOutput.Booker.class))
-                .andExpect(jsonPath("$.item", is(bookingOutput.getItem()), BookingOutput.Item.class));
+                        User.class))
+                .andExpect(jsonPath("$.item", is(bookingOutput.getItem()), Item.class));
     }
 
     @Test
@@ -139,8 +139,8 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$.id", is(bookingOutput.getId()), Long.class))
                 .andExpect(jsonPath("$.status", is(String.valueOf(bookingOutput.getStatus()))))
                 .andExpect(jsonPath("$.booker", is(bookingOutput.getBooker()),
-                        BookingOutput.Booker.class))
-                .andExpect(jsonPath("$.item", is(bookingOutput.getItem()), BookingOutput.Item.class));
+                        User.class))
+                .andExpect(jsonPath("$.item", is(bookingOutput.getItem()), Item.class));
     }
 
     @Test
@@ -158,8 +158,8 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$[0].id", is(bookingOutput.getId()), Long.class))
                 .andExpect(jsonPath("$[0].status", is(String.valueOf(bookingOutput.getStatus()))))
                 .andExpect(jsonPath("$[0].booker", is(bookingOutput.getBooker()),
-                        BookingOutput.Booker.class))
-                .andExpect(jsonPath("$[0].item", is(bookingOutput.getItem()), BookingOutput.Item.class));
+                        User.class))
+                .andExpect(jsonPath("$[0].item", is(bookingOutput.getItem()), Item.class));
     }
 
 }

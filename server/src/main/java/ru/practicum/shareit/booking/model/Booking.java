@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.item.model.Item;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "bookings", schema = "public")
 public class Booking {
@@ -31,12 +33,12 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
-    public Booking(long id, LocalDateTime start, LocalDateTime end, Item item, User booker, BookingStatus status) {
+    /*public Booking(long id, LocalDateTime start, LocalDateTime end, Item item, User booker, BookingStatus status) {
         this.id = id;
         this.start = start;
         this.end = end;
         this.item = item;
         this.booker = booker;
         this.status = status;
-    }
+    }*/
 }

@@ -2,10 +2,10 @@ package ru.practicum.shareit.booking.dto;
 
 import lombok.*;
 import ru.practicum.shareit.booking.model.BookingStatus;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @AllArgsConstructor
 @Data
@@ -16,10 +16,10 @@ public class BookingOutput {
     private LocalDateTime start;
     private LocalDateTime end;
     private Item item;
-    private Booker booker;
+    private User booker;
     private BookingStatus status;
 
-    @Getter
+  /*  @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
@@ -73,5 +73,5 @@ public class BookingOutput {
         public int hashCode() {
             return Objects.hash(id, name);
         }
-    }
+    }*/
 }

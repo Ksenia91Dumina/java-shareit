@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.additions.Create;
@@ -15,7 +16,7 @@ import ru.practicum.shareit.exception.ValidateException;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-@RestController
+@Controller
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
 @Slf4j
@@ -42,7 +43,7 @@ public class BookingController {
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                                              @PathVariable long bookingId) {
-        log.info("Получен запрос на поиск информации по id бронирования");
+        log.info("Получен запрос на поиск информации по id  = {} бронирования", bookingId);
         return bookingClient.getBookingById(bookingId, userId);
     }
 
@@ -51,13 +52,13 @@ public class BookingController {
                                                       @RequestParam(name = "state", defaultValue = "ALL") String stateText,
                                                       @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                       @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("Получен запрос на поиск бронирования по id пользователя");
+        log.info("Получен запрос на поиск бронирования по id пользователя = {}", userId);
         BookingState state = BookingState.from(stateText)
                 .orElseThrow(() -> new IllegalArgumentException(stateText + " не существует"));
         validateBookingState(state, stateText);
         checkingParamsForPagination(from, size);
         final MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.unsorted());
-        return bookingClient.getBookingsByUserId(state, userId, pageRequest);
+        return bookingClient.getBookingsByUserId(userId, state, pageRequest);
     }
 
     @GetMapping("/owner")

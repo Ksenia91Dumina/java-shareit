@@ -40,11 +40,12 @@ public class BookingClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getBookingById(long userId, Long bookingId) {
+
         return get("/" + bookingId, userId);
     }
 
 
-    public ResponseEntity<Object> getBookingsByUserId(BookingState state, long userId, MyPageRequest pageRequest) {
+    public ResponseEntity<Object> getBookingsByUserId(long userId, BookingState state, MyPageRequest pageRequest) {
         Map<String, Object> parameters = Map.of(
                 "state", state.name(),
                 "pageRequest", pageRequest
