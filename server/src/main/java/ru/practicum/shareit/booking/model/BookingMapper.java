@@ -28,24 +28,13 @@ public class BookingMapper {
                 bookingDto.getStatus());
     }
 
-    /*public static BookingOutput toBookingOutput(Booking booking) {
+    public static BookingOutput toBookingOutput(Booking booking) {
         return BookingOutput.builder()
                 .id(booking.getId())
                 .start(booking.getStart())
                 .end(booking.getEnd())
                 .booker(new BookingOutput.Booker(booking.getBooker()))
                 .item(new BookingOutput.Item(booking.getItem()))
-                .status(booking.getStatus())
-                .build();
-    }*/
-
-    public static BookingOutput toBookingOutput(Booking booking) {
-        return BookingOutput.builder()
-                .id(booking.getId())
-                .start(booking.getStart())
-                .end(booking.getEnd())
-                .booker(booking.getBooker())
-                .item(booking.getItem())
                 .status(booking.getStatus())
                 .build();
     }
