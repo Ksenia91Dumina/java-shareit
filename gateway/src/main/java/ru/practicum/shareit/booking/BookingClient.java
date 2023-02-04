@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.shareit.additions.MyPageRequest;
 import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingState;
 import ru.practicum.shareit.client.BaseClient;
@@ -45,20 +44,22 @@ public class BookingClient extends BaseClient {
     }
 
 
-    public ResponseEntity<Object> getBookingsByUserId(long userId, BookingState state, MyPageRequest pageRequest) {
+    public ResponseEntity<Object> getBookingsByUserId(long userId, BookingState state, Integer from, Integer size) {
         Map<String, Object> parameters = Map.of(
                 "state", state.name(),
-                "pageRequest", pageRequest
+                "from", from,
+                "size", size
         );
-        return get("?state={state}&pageRequest={pageRequest}", userId, parameters);
+        return get("?state={state}&from={from}&size={size}", userId, parameters);
     }
 
 
-    public ResponseEntity<Object> getBookingItemsByOwnerId(BookingState state, long userId, MyPageRequest pageRequest) {
+    public ResponseEntity<Object> getBookingItemsByOwnerId(BookingState state, long userId, Integer from, Integer size) {
         Map<String, Object> parameters = Map.of(
                 "state", state.name(),
-                "pageRequest", pageRequest
+                "from", from,
+                "size", size
         );
-        return get("/owner?state={state}&pageRequest={pageRequest}", userId, parameters);
+        return get("/owner?state={state}&from={from}&size={size}", userId, parameters);
     }
 }

@@ -2,13 +2,11 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.additions.Create;
-import ru.practicum.shareit.additions.MyPageRequest;
 import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingState;
 import ru.practicum.shareit.exception.ValidateException;
@@ -56,9 +54,7 @@ public class BookingController {
         BookingState state = BookingState.from(stateText)
                 .orElseThrow(() -> new IllegalArgumentException(stateText + " не существует"));
         validateBookingState(state, stateText);
-        checkingParamsForPagination(from, size);
-        final MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.unsorted());
-        return bookingClient.getBookingsByUserId(userId, state, pageRequest);
+        return bookingClient.getBookingsByUserId(userId, state, from, size);
     }
 
     @GetMapping("/owner")
@@ -70,10 +66,8 @@ public class BookingController {
         log.info("Получен запрос на поиск бронирования по id владельца");
         BookingState state = BookingState.from(stateText)
                 .orElseThrow(() -> new IllegalArgumentException(stateText + " не существует"));
-        checkingParamsForPagination(from, size);
         validateBookingState(state, stateText);
-        final MyPageRequest pageRequest = new MyPageRequest(from, size, Sort.unsorted());
-        return bookingClient.getBookingItemsByOwnerId(state, userId, pageRequest);
+        return bookingClient.getBookingItemsByOwnerId(state, userId, from, size);
     }
 
     private void validateBookingDate(BookItemRequestDto bookingDto) {
@@ -85,12 +79,6 @@ public class BookingController {
     public void validateBookingState(BookingState state, String stateText) {
         if (state == null) {
             throw new ValidateException(String.format("Unknown state: %s", stateText));
-        }
-    }
-
-    private void checkingParamsForPagination(int from, int size) {
-        if (from > size) {
-            throw new IllegalArgumentException("Параметр from должен быть меньше размера страницы");
         }
     }
 
