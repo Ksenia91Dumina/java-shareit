@@ -18,7 +18,7 @@ public class CommentDto {
 
     private long id;
     @NotBlank(groups = {Create.class})
-    @Size(max = 4000)
+    @Size(max = 4000, groups = {Create.class})
     private String text;
     private String authorName;
     private long itemId;

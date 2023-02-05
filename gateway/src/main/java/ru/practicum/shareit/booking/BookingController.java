@@ -42,7 +42,7 @@ public class BookingController {
     public ResponseEntity<Object> getBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                                              @PathVariable long bookingId) {
         log.info("Получен запрос на поиск информации по id  = {} бронирования", bookingId);
-        return bookingClient.getBookingById(bookingId, userId);
+        return bookingClient.getBookingById(userId, bookingId);
     }
 
     @GetMapping

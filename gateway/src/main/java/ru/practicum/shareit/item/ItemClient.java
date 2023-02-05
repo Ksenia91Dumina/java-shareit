@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.shareit.additions.MyPageRequest;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -37,27 +36,25 @@ public class ItemClient extends BaseClient {
         return patch("/" + itemId, userId, itemDto);
     }
 
-    public ResponseEntity<Object> getItemById(long itemId) {
-        return get("/" + itemId);
-    }
-
     public ResponseEntity<Object> getItemInfoById(long itemId, long userId) {
         return get("/" + itemId, userId);
     }
 
-    public ResponseEntity<Object> getItemsInfoByUserId(long userId, MyPageRequest pageRequest) {
+    public ResponseEntity<Object> getItemsInfoByUserId(long userId, Integer from, Integer size) {
         Map<String, Object> parameters = Map.of(
-                "pageRequest",pageRequest
+                "from", from,
+                "size", size
         );
-        return get("?pageRequest={pageRequest}", userId, parameters);
+        return get("?from={from}&size={size}", userId, parameters);
     }
 
-    public ResponseEntity<Object> searchByText(String text, MyPageRequest pageRequest) {
+    public ResponseEntity<Object> searchByText(String text, Integer from, Integer size) {
         Map<String, Object> parameters = Map.of(
                 "text", text,
-                "pageRequest", pageRequest
+                "from", from,
+                "size", size
         );
-        return get("/search?text={text}&pageRequest={pageRequest}", null, parameters);
+        return get("/search?text={text}&from={from}&size={size}", null, parameters);
     }
 
     public ResponseEntity<Object> addComment(CommentDto commentDto, long userId, long itemId) {

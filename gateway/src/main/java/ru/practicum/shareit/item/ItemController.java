@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.additions.Create;
-import ru.practicum.shareit.additions.MyPageRequest;
 import ru.practicum.shareit.additions.Update;
 import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -51,9 +50,7 @@ public class ItemController {
                                                        @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                        @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info(String.format("Получен запрос на получение списка предметов пользователя с id = %s", userId));
-        int page = from / size;
-        final MyPageRequest pageRequest = MyPageRequest.of(page, size);
-        return itemClient.getItemsInfoByUserId(userId, pageRequest);
+        return itemClient.getItemsInfoByUserId(userId, from, size);
     }
 
     @GetMapping("/search")
@@ -61,9 +58,7 @@ public class ItemController {
                                                @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на поиск по тексту");
-        int page = from / size;
-        final MyPageRequest pageRequest = MyPageRequest.of(page, size);
-        return itemClient.searchByText(text, pageRequest);
+        return itemClient.searchByText(text, from, size);
     }
 
     @PostMapping("/{itemId}/comment")
