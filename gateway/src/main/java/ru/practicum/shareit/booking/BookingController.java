@@ -51,7 +51,7 @@ public class BookingController {
                                                       @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                       @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на поиск бронирования по id пользователя = {}", userId);
-        BookingState state = BookingState.from(stateText)
+        BookingState state = BookingState.fromString(stateText)
                 .orElseThrow(() -> new IllegalArgumentException(stateText + " не существует"));
         return bookingClient.getBookingsByUserId(userId, state, from, size);
     }
@@ -63,7 +63,7 @@ public class BookingController {
                                                            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Получен запрос на поиск бронирования по id владельца");
-        BookingState state = BookingState.from(stateText)
+        BookingState state = BookingState.fromString(stateText)
                 .orElseThrow(() -> new IllegalArgumentException(stateText + " не существует"));
         return bookingClient.getBookingItemsByOwnerId(state, userId, from, size);
     }
