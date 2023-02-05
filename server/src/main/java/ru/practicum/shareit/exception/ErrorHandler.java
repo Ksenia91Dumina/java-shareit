@@ -39,13 +39,6 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-   /* @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleAnotherException(final ConstraintViolationException e) {
-        log.info("400 {}", e.getMessage(), e);
-        return new ErrorResponse(e.getMessage());
-    }*/
-
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidateException(final ValidateException e) {

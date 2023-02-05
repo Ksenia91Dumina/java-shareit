@@ -33,7 +33,7 @@ public class BookingController {
     public BookingOutput updateBooking(@PathVariable long bookingId,
                                        @RequestParam boolean approved,
                                        @RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("Получен запрос на подтверждение бронирования с id = ", bookingId);
+        log.info("Получен запрос на подтверждение бронирования с id = {}", bookingId);
         return service.updateBooking(bookingId, approved, userId);
     }
 

@@ -19,12 +19,12 @@ services:
     image: server_image
     container_name: server_container
     ports:
-      - "9091:9090"
+      - "9090:9090"
     depends_on:
       - db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
-      - DB_NAME=shareit
+      - DB_NAME=ShareIt
       - DB_HOST=localhost
       - DB_PORT=5432
       - POSTGRES_USER=root
@@ -39,7 +39,7 @@ services:
     volumes:
       - /var/lib/postgresql/data/
     ports:
-      - "5433:5432"
+      - "6541:5432"
     environment:
       - POSTGRES_DB=shareit
       - POSTGRES_USER=root

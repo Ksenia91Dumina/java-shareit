@@ -26,12 +26,4 @@ public class ItemDto {
     @NotNull(groups = {Create.class})
     private Boolean available;
     private Long requestId;
-
-    public ItemDto(long id, String name, String description, Boolean available, Long requestId) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.available = available;
-        this.requestId = requestId;
-    }
 }
