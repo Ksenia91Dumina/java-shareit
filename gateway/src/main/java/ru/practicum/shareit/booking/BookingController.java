@@ -53,7 +53,6 @@ public class BookingController {
         log.info("Получен запрос на поиск бронирования по id пользователя = {}", userId);
         BookingState state = BookingState.from(stateText)
                 .orElseThrow(() -> new IllegalArgumentException(stateText + " не существует"));
-        validateBookingState(state, stateText);
         return bookingClient.getBookingsByUserId(userId, state, from, size);
     }
 
@@ -66,7 +65,6 @@ public class BookingController {
         log.info("Получен запрос на поиск бронирования по id владельца");
         BookingState state = BookingState.from(stateText)
                 .orElseThrow(() -> new IllegalArgumentException(stateText + " не существует"));
-        validateBookingState(state, stateText);
         return bookingClient.getBookingItemsByOwnerId(state, userId, from, size);
     }
 
@@ -76,11 +74,7 @@ public class BookingController {
         }
     }
 
-    public void validateBookingState(BookingState state, String stateText) {
-        if (state == null) {
-            throw new ValidateException(String.format("Unknown state: %s", stateText));
-        }
-    }
-
 }
+
+
 
